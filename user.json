@@ -1,0 +1,13 @@
+{
+    "id": "",
+    "username": "not unique",
+    "email": "",
+    "password": "",
+    "favoriteLessons": {
+        "name": "",
+        "img": "",
+        "id": ""
+    }
+}
+
+

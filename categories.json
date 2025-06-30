@@ -1,0 +1,8 @@
+{
+    "id": "unique",
+    "sectionId": "",
+    "name": "string",
+    "img": "string",
+    "explanation":"string",
+    "index":"number"
+}

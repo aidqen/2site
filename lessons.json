@@ -1,0 +1,9 @@
+{
+    "id": "unique",
+    "categoryId": "according to category",
+    "name": "string",
+    "img": "string",
+    "link": "string",
+    "title": "string",
+    "index": "number"
+}
