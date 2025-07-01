@@ -13,7 +13,7 @@ export const CATEGORIES: Category[] = [
     title: 'פונקציונלי תפקודי',
     imgUrl: 'https://res.cloudinary.com/di6tqrg5y/image/upload/v1751112658/dafna-1_smvsj3.png',
     sectionId: 'long',
-    description: 'אירובי - סיבולת לב וריאה'
+    description:`שיפור באורך מלא הכולל את כל מרכיבי הכושר המומלצים לגיל השלישי. נעשה בו שימוש קבוע בכיסא, ושילוב אביזרים כמו: כדור, גומיות, משקולות ומשקל גוף.`
   },
   {
     id: '3',

@@ -2,8 +2,7 @@ import { CenterDuet } from "@/components/CenterDuet";
 import { PageContainer } from "@/components/PageContainer";
 import { SectionPreview } from "@/components/SectionPreview";
 import { router, Stack } from "expo-router";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, View } from "react-native";
 
 export default function Home() {
 
@@ -32,7 +31,7 @@ export default function Home() {
 
 
    return (
-      <SafeAreaView className="h-full bg-white pb-6">
+      <SafeAreaView className="h-full bg-white pt-6 pb-10">
          <Stack.Screen options={{ headerShown: false }} />
          
          <PageContainer
@@ -47,7 +46,6 @@ export default function Home() {
                      onPress={() => router.push({pathname: "/section/[id]", params: {id: section.id.toString()}})} 
                   />
                ))}
-               
                <CenterDuet />
             </View>
          </PageContainer>

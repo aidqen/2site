@@ -1,7 +1,6 @@
 import { colors } from "@/constants/styles";
 import { router } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, Text, TouchableOpacity } from "react-native";
 
 interface ErrorStateProps {
   message: string;

@@ -7,8 +7,7 @@ import { CATEGORIES, SECTIONS } from "@/constants/mockData";
 import { Category, Section } from "@/types";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native";
 
 /**
  * SectionDetails page displays categories for a specific section
@@ -73,27 +72,22 @@ export default function SectionDetails() {
   }
 
   return (
-    <SafeAreaView className="h-full bg-white py-6">
-      <Stack.Screen
-        options={{
-          headerShown: false,
-        }}
-      />
-        <BackButton />
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} className="py-16">
+      <BackButton />
+      <Stack.Screen options={{ headerShown: false }} />
+
       <PageContainer
         title={section.title}
         description={section.description}
         paddingBottom={20}
       >
-        <View className="w-full gap-5 items-center">
-          {categories.map((category) => (
-            <SectionPreview
-              key={category.id}
-              section={category}
-              onPress={handleCategoryPress}
-            />
-          ))}
-        </View>
+        {categories.map((category) => (
+          <SectionPreview
+            key={category.id}
+            section={category}
+            onPress={() => handleCategoryPress(category.id)}
+          />
+        ))}
       </PageContainer>
     </SafeAreaView>
   );

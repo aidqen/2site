@@ -1,6 +1,6 @@
+import { colors } from "@/constants/styles";
 import { ReactNode } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { colors } from "@/constants/styles";
 
 interface PageContainerProps {
   children: ReactNode;
@@ -23,35 +23,44 @@ export function PageContainer({
 }: PageContainerProps) {
   return (
     <ScrollView
-      className="w-full px-6"
-      contentContainerStyle={{ 
-        paddingBottom: paddingBottom, 
-        alignItems: 'center', 
-        gap: gap, 
-        justifyContent: 'flex-start' 
+      style={{ flex: 1, paddingHorizontal: 24 }}    // px-6
+      contentContainerStyle={{
+        flexGrow: 1,                                 // fills the screen
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        paddingBottom,
+        gap,
       }}
     >
-      {/* Header section with title and description */}
       {(title || description) && (
-        <View className="mt-10 items-center gap-2">
+        <View
+          style={{
+            marginTop: 40,                          // mt-10
+            alignItems: 'center',
+            marginBottom: gap,
+          }}
+        >
           {title && (
             <Text
-              className="font-semibold text-4xl"
-              style={{ color: colors.primaryDarker }}
+              style={{
+                fontSize: 32,                       // text-4xl
+                fontWeight: '600',
+                color: colors.primaryDarker,
+              }}
             >
               {title}
             </Text>
           )}
           {description && (
-            <Text className="text-center text-2xl">
+            <Text style={{ fontSize: 20, textAlign: 'center' }}>
               {description}
             </Text>
           )}
         </View>
       )}
 
-      {/* Main content */}
       {children}
     </ScrollView>
   );
 }
+

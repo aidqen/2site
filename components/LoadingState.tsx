@@ -1,6 +1,5 @@
 import { colors } from "@/constants/styles";
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, Text } from "react-native";
 
 interface LoadingStateProps {
   message?: string;
