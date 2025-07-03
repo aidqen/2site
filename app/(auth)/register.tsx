@@ -5,7 +5,7 @@ import { colors } from '@/constants/styles';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
@@ -28,15 +28,13 @@ export default function RegisterScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" />
       <Stack.Screen options={{ headerShown: false }} />
-      
-      {/* <BackButton /> */}
-      
-      <View className="flex-1 px-6 pt-[60px]">
-        <View className="items-center mb-8">
-          <Text className="font-ibm-bold text-2xl text-[#12616f] mb-2">נשלום!</Text>
-          <Text className="font-ibm-regular text-lg text-[#666666]">הירשם כדי להתחיל</Text>
+
+      <View className="flex-1 px-6 pt-[125px]">
+        <View className="items-end mb-8">
+          <Text className="font-bold text-2xl mb-2"
+            style={{ color: colors.primaryDarker }}>שלום!<br />הירשם כדי להתחיל</Text>
         </View>
-        
+
         <View className="w-full mb-6">
           <AuthInput
             placeholder="שם משתמש"
@@ -44,43 +42,43 @@ export default function RegisterScreen() {
             onChangeText={setUsername}
             autoCapitalize="none"
           />
-          
+
           <AuthInput
-            placeholder="אימייל"
+            placeholder='דוא"ל'
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
-          
+
           <AuthInput
             placeholder="סיסמא"
             value={password}
             onChangeText={setPassword}
             isPassword={true}
           />
-          
+
           <AuthInput
             placeholder="אישור סיסמא"
             value={confirmPassword}
             onChangeText={setConfirmPassword}
             isPassword={true}
           />
-          
+
           <AuthButton
             title="הירשם"
             onPress={handleRegister}
             isLoading={isLoading}
           />
         </View>
-        
+
         <SocialLoginButtons />
-        
-        <View className="flex-row justify-center mt-6">
-          <Text className="font-ibm-regular text-base text-[#666666]">כבר יש לך חשבון? </Text>
-          <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
-            <Text className="font-ibm-semibold text-base text-[#12616f]">התחבר עכשיו</Text>
+
+        <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">
+          <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+            <Text className="font-bold text-base text-[#12616f]">הירשם עכשיו</Text>
           </TouchableOpacity>
+          <Text className="font-medium text-base text-[#666666]">אין לך חשבון?</Text>
         </View>
       </View>
     </SafeAreaView>
