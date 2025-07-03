@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "940099451051",
+    "project_id": "dafna-caspi",
+    "storage_bucket": "dafna-caspi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:940099451051:android:e752daeea4456a3cfddfee",
+        "android_client_info": {
+          "package_name": "com.dafnacaspi.yogapilates"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "940099451051-27k3m5q01c4d11pfb104jdlqrj7q3jl7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfZ6dNtgJwitp9gOCvg7ZjFXw3TMp_M74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "940099451051-27k3m5q01c4d11pfb104jdlqrj7q3jl7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "940099451051-j9h8r7i287nvs42bi28e6o6ql9dai8ak.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dafnacaspi"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
