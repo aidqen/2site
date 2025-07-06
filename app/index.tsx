@@ -20,7 +20,7 @@ export default function Index() {
 
   const handleStart = () => {
     // Navigate to the main screen when the button is pressed
-    router.push("/home");
+    router.push("/welcome");
   };
 
   if (!fontsLoaded) {

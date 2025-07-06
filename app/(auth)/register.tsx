@@ -2,6 +2,8 @@ import { AuthButton } from '@/components/auth/AuthButton';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
+import { onGoogleButtonPress } from '@/services/firebase.service';
+import auth from '@react-native-firebase/auth';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
@@ -15,14 +17,30 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleRegister = () => {
-    setIsLoading(true);
-    // Simulate registration process
-    setTimeout(() => {
-      setIsLoading(false);
-      router.replace('/(app)/home');
-    }, 1500);
-  };
+  
+  function handleGoogleLogin() {
+    console.log('hi');
+    
+    onGoogleButtonPress()
+  }
+
+  const onSignup = () => {
+    auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      console.log('User account created & signed in!');
+    })
+    .catch(error => {
+      if (error.code === 'auth/email-already-in-use') {
+        console.log('That email address is already in use!');
+      }
+
+      if (error.code === 'auth/invalid-email') {
+        console.log('That email address is invalid!');
+      }
+
+      console.error(error);
+    });
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -67,12 +85,12 @@ export default function RegisterScreen() {
 
           <AuthButton
             title="הירשם"
-            onPress={handleRegister}
+            onPress={onSignup}
             isLoading={isLoading}
           />
         </View>
 
-        <SocialLoginButtons />
+        <SocialLoginButtons onGooglePress={handleGoogleLogin}/>
 
         <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">
           <TouchableOpacity onPress={() => router.push('/(auth)/register')}>

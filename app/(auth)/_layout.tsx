@@ -1,6 +1,6 @@
 import { BackButton } from "@/components/BackButton";
 import { Stack } from "expo-router";
-import '../globals.css';
+// import '../../app/globals.css';
 
 /**
  * Root layout component that sets up the app structure
