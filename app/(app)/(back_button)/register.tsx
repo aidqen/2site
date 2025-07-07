@@ -2,7 +2,6 @@ import { AuthButton } from '@/components/auth/AuthButton';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
-import { onGoogleButtonPress } from '@/services/firebase.service';
 import auth from '@react-native-firebase/auth';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -18,11 +17,11 @@ export default function RegisterScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   
-  function handleGoogleLogin() {
-    console.log('hi');
+  // function handleGoogleLogin() {
+  //   console.log('hi');
     
-    onGoogleButtonPress()
-  }
+  //   onGoogleButtonPress()
+  // }
 
   const onSignup = () => {
     auth().createUserWithEmailAndPassword(email, password)
@@ -49,8 +48,10 @@ export default function RegisterScreen() {
 
       <View className="flex-1 px-6 pt-[125px]">
         <View className="items-end mb-8">
-          <Text className="font-bold text-2xl mb-2"
-            style={{ color: colors.primaryDarker }}>שלום!<br />הירשם כדי להתחיל</Text>
+          <Text className="font-bold text-[32px]"
+            style={{ color: colors.primaryDarker }}>שלום!</Text>
+          <Text className="font-bold text-[32px] mb-2"
+            style={{ color: colors.primaryDarker }}>הירשם כדי להתחיל</Text>
         </View>
 
         <View className="w-full mb-6">
@@ -90,13 +91,15 @@ export default function RegisterScreen() {
           />
         </View>
 
-        <SocialLoginButtons onGooglePress={handleGoogleLogin}/>
+        <SocialLoginButtons 
+        // onGooglePress={handleGoogleLogin}
+        />
 
         <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">
-          <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+          <TouchableOpacity onPress={() => router.push('/register')}>
             <Text className="font-bold text-base text-[#12616f]">הירשם עכשיו</Text>
           </TouchableOpacity>
-          <Text className="font-medium text-base text-[#666666]">אין לך חשבון?</Text>
+          <Text className="font-medium text-base text-[#666666]">יש לך חשבון?</Text>
         </View>
       </View>
     </SafeAreaView>

@@ -22,8 +22,8 @@ export default function WelcomeScreen() {
             top: '5%',
             alignSelf: 'center',
             marginTop: 60,
-            resizeMode: 'contain'
           }}
+          resizeMode="contain"
         />
 
         {/* Text absolutely centered in page */}

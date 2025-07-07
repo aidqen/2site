@@ -5,7 +5,7 @@ import { Stack } from "expo-router";
 /**
  * Root layout component that sets up the app structure
  */
-export default function RootLayout() {
+export default function AuthLayout() {
     return (
         <>
             <BackButton />

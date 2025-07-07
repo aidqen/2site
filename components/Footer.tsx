@@ -11,6 +11,7 @@ export default function Footer() {
   const router = useRouter();
   const pathname = usePathname();
 
+
   // Navigation items for the footer
   const navItems = [
     { icon: 'star', path: '/lessons' },

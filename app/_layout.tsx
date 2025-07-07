@@ -1,5 +1,8 @@
+import '@react-native-firebase/app';
 import { Stack } from "expo-router";
 import './globals.css';
+
+// Firebase is automatically initialized when importing the app module
 
 /**
  * Root layout component that sets up the app structure
