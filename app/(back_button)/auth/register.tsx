@@ -1,12 +1,14 @@
 import { AuthButton } from '@/components/auth/AuthButton';
+import { AuthFooter } from '@/components/auth/AuthFooter';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
-import { supabase } from '@/lib/supabase';
+import { createUserWithEmailAndPassword, getAuth } from '@react-native-firebase/auth';
+import firestore from "@react-native-firebase/firestore";
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
@@ -16,47 +18,37 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter()
+  const auth = getAuth()
 
-
-  // const handleGoogleLogin = async () => {
-  //   const redirectUrl = Platform.select({
-  //     web: window.location.origin,
-  //     default: AuthSession.makeRedirectUri({ scheme: 'myapp' })
-  //   });
-
-  //   const { data, error } = await supabase.auth.signInWithOAuth({
-  //     provider: 'google',
-  //     options: { redirectTo: redirectUrl }
-  //   });
-
-  //   if (error) {
-  //     console.error('Google sign-in error:', error);
-  //   } else {
-  //     // data.url is the OAuth login URL; on web you'd navigate to it, on RN Expo it opens in Expo AuthSession :contentReference[oaicite:7]{index=7}
-  //     if (Platform.OS === 'web') {
-  //       window.location.href = data.url;
-  //     } else {
-  //       await AuthSession.startAsync({ authUrl: data.url, returnUrl: redirectUrl });
-  //     }
-  //   }
-  // };
 
 
 
   async function signUpWithEmail() {
-    setLoading(true)
-    const {
-      data,
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    })
+    if (!username || !email || !password || !confirmPassword) {
+      const missingFields = []
+      if (!username) missingFields.push('Username')
+      if (!email) missingFields.push('Email')
+      if (!password) missingFields.push('Password')
+      if (!confirmPassword) missingFields.push('Confirm Password')
+      Alert.alert('Error', `Please fill in the following fields: ${missingFields.join(', ')}`);
+      return;
+    }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const { uid } = userCredential.user;
+      await firestore()
+        .collection("users")
+        .doc(uid)
+        .set({
+          username,
+          favoriteLessons: [],
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
+      router.replace('/home')
+      console.log('User signed up successfully!');
+    } catch (err) {
 
-    if (error) Alert.alert(error.message)
-    if (!data.session) Alert.alert('Please check your inbox for email verification!')
-    router.replace('/home')
-    setLoading(false)
+    }
   }
 
 
@@ -111,18 +103,10 @@ export default function RegisterScreen() {
         </View>
 
         <SocialLoginButtons
-          // onGooglePress={handleGoogleLogin}
         />
 
-        <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">
-          <TouchableOpacity onPress={() => router.push('/register')}>
-            <Text className="font-bold text-base text-[#12616f]">הירשם עכשיו</Text>
-          </TouchableOpacity>
-          <Text className="font-medium text-base text-[#666666]">יש לך חשבון?</Text>
-        </View>
+        <AuthFooter type="register" />
       </View>
     </SafeAreaView>
   );
 }
-
-

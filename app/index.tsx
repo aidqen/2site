@@ -1,3 +1,4 @@
+import { useUser } from "@/hooks/useUser";
 import { useFonts } from "expo-font";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useRouter } from "expo-router";
@@ -11,6 +12,9 @@ const profileImage = require("../assets/images/profile.png");
  */
 export default function Index() {
   const router = useRouter();
+    const { user, isAuthenticated } = useUser()
+    console.log("🔍 ~ WelcomeScreen ~ app/welcome.tsx:10 ~ user:", isAuthenticated)
+  
   
   // Load custom fonts if needed
   const [fontsLoaded] = useFonts({
@@ -19,8 +23,8 @@ export default function Index() {
   });
 
   const handleStart = () => {
-    // Navigate to the main screen when the button is pressed
-    router.push("/welcome");
+    if (isAuthenticated) router.push('/home')
+      else router.push('/auth/login')
   };
 
   if (!fontsLoaded) {

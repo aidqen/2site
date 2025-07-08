@@ -1,9 +1,9 @@
 import { MainButton } from '@/components/ui/MainButton';
 import { colors } from '@/constants/styles';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 
 type ButtonItem = {
     title: string;
@@ -87,7 +87,7 @@ export default function AdminHome() {
                     variant="filled"
                     color={colors.secondary}
                     containerStyle={{ marginTop: 16 }}
-                    onPress={() => router.push('/login')}
+                    onPress={() => router.push('/auth/login')}
                 />
             </ View>
         </SafeAreaView>
