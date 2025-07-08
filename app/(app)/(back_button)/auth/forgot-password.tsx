@@ -16,7 +16,7 @@ export default function ForgotPasswordScreen() {
     // Simulate API call to send verification code
     setTimeout(() => {
       setIsLoading(false);
-      router.push('/(auth)/verify-otp');
+      router.push('/auth/verify-otp');
     }, 1500);
   };
 
@@ -55,7 +55,7 @@ export default function ForgotPasswordScreen() {
         </View>
         
         <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center gap-1">
-          <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
+          <TouchableOpacity onPress={() => router.push('/auth/login')}>
             <Text className="font-bold text-base" style={{color: colors.primaryDarker}}>
               זכור את הסיסמא? התחבר
             </Text>

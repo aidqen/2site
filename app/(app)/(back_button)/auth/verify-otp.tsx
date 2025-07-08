@@ -3,7 +3,7 @@ import { colors } from '@/constants/styles';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function VerifyOTPScreen() {
@@ -31,7 +31,8 @@ export default function VerifyOTPScreen() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      router.push('/(auth)/reset-password');
+      // Fixed router path to match the expected type
+      router.push('/auth/reset-password');
     }, 1500);
   };
 
@@ -56,20 +57,28 @@ export default function VerifyOTPScreen() {
         </View>
 
         <View className="w-full mb-6">
-          <View className="flex-row justify-between mb-6">
-            {[0, 1, 2, 3].map((index) => (
-              <TextInput
-                key={index}
-                ref={(ref) => { inputRefs.current[index] = ref }}
-                className={`h-16 border rounded-lg text-center text-2xl font-bold ${otp[index] ? 'bg-white border-[#74CEDE]' : 'border-[#E8ECF4] bg-[#F7F8F9]'}`}
-                style={{ color: colors.primaryDarker, width: 70, height: 70 }}
-                keyboardType="number-pad"
-                maxLength={1}
-                value={otp[index]}
-                onChangeText={(text) => handleOtpChange(text, index)}
-                onKeyPress={(e) => handleKeyPress(e, index)}
-              />
-            ))}
+          <View className="mb-6">
+            <FlatList<number>
+              data={[0, 1, 2, 3]}
+              horizontal={false}
+              numColumns={4}
+              columnWrapperStyle={{ justifyContent: 'space-between' }}
+              scrollEnabled={false}
+              keyExtractor={(item: number) => `otp-${item}`}
+              renderItem={({ item: index }: { item: number }) => (
+                <TextInput
+                  key={index}
+                  ref={(ref) => { inputRefs.current[index] = ref }}
+                  className={`h-16 border rounded-lg text-center text-2xl font-bold ${otp[index] ? 'bg-white border-[#74CEDE]' : 'border-[#E8ECF4] bg-[#F7F8F9]'}`}
+                  style={{ color: colors.primaryDarker, width: 70, height: 70 }}
+                  keyboardType="number-pad"
+                  maxLength={1}
+                  value={otp[index]}
+                  onChangeText={(text) => handleOtpChange(text, index)}
+                  onKeyPress={(e) => handleKeyPress(e, index)}
+                />
+              )}
+            />
           </View>
 
           <AuthButton

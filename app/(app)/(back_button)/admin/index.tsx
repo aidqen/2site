@@ -1,32 +1,45 @@
 import { MainButton } from '@/components/ui/MainButton';
 import { colors } from '@/constants/styles';
 import React from 'react';
-import { Text, View } from 'react-native';
+import { FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+
+type ButtonItem = {
+    title: string;
+    variant?: 'filled' | 'outlined';
+    onPress?: () => void;
+};
 
 export default function AdminHome() {
+    const router = useRouter();
 
-    const lessonButtons = [
+    const lessonButtons: ButtonItem[] = [
         {
             title: "הוספת סרטון חדש",
-            variant: "filled" as const,
+            variant: "filled",
+            onPress: () => router.push('/admin/form?type=video&isEdit=false')
         },
         {
             title: "עריכת שיעורים באתר מלא",
+            onPress: () => router.push('/admin/form?type=video&isEdit=true')
         },
         {
             title: "עריכת שיעורים קצרים",
+            onPress: () => router.push('/admin/form?type=category&isEdit=true')
         }
-    ]
+    ];
 
-    const promotionalButtons = [
+    const promotionalButtons: ButtonItem[] = [
         {
             title: "עריכת תוכן שיווקי",
+            onPress: () => router.push('/admin/form?type=promotional&isEdit=true')
         },
         {
             title: "תמיכה",
+            onPress: () => {}
         }
-    ]
+    ];
     return (
         <SafeAreaView className="hi flex-1 bg-white " style={{ paddingHorizontal: 36, paddingVertical: 132 }}>
             <View className="flex-1">
@@ -39,33 +52,42 @@ export default function AdminHome() {
                     </Text>
                 </View>
                 <View className='mb-16'>
-                    {lessonButtons.map((button, index) => (
-                        <MainButton
-                            key={index}
-                            title={button.title}
-                            variant={button.variant}
-                            color={colors.primaryDarker}
-                            onPress={() => { }}
-                        />
-                    ))}
+                    <FlatList<ButtonItem>
+                        data={lessonButtons}
+                        keyExtractor={(_: ButtonItem, index: number) => `lesson-${index}`}
+                        renderItem={({ item }: { item: ButtonItem }) => (
+                            <MainButton
+                                title={item.title}
+                                variant={item.variant}
+                                color={colors.primaryDarker}
+                                onPress={item.onPress || (() => {})}
+                            />
+                        )}
+                        scrollEnabled={false}
+                        contentContainerStyle={{ gap: 8 }}
+                    />
                 </View>
 
                 <View className='mb-16'>
-                    {promotionalButtons.map((button, index) => (
-                        <MainButton
-                            key={index}
-                            title={button.title}
-                            onPress={() => { }}
-                        />
-                    ))}
-
+                    <FlatList<ButtonItem>
+                        data={promotionalButtons}
+                        keyExtractor={(_: ButtonItem, index: number) => `promo-${index}`}
+                        renderItem={({ item }: { item: ButtonItem }) => (
+                            <MainButton
+                                title={item.title}
+                                onPress={item.onPress || (() => {})}
+                            />
+                        )}
+                        scrollEnabled={false}
+                        contentContainerStyle={{ gap: 8 }}
+                    />
                 </View>
                 <MainButton
                     title="התנתקות"
                     variant="filled"
                     color={colors.secondary}
                     containerStyle={{ marginTop: 16 }}
-                    onPress={() => { }}
+                    onPress={() => router.push('/login')}
                 />
             </ View>
         </SafeAreaView>

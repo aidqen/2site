@@ -42,7 +42,7 @@ export default function WelcomeScreen() {
         <View className="absolute -translate-x-[50%] left-[50%] bottom-2.5 w-full px-6 mb-8 self-end">
           <AuthButton
             title="התחברות"
-            onPress={() => router.push('/login')}
+            onPress={() => router.push('/auth/login')}
             variant="primary"
             className='h-[53px]'
             textStyle="text-3xl"
@@ -50,7 +50,7 @@ export default function WelcomeScreen() {
 
           <AuthButton
             title="הרשמה"
-            onPress={() => router.push('/register')}
+            onPress={() => router.push('/auth/register')}
             variant="secondary"
             className='h-[53px]'
             textStyle="text-3xl"

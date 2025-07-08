@@ -2,11 +2,11 @@ import { AuthButton } from '@/components/auth/AuthButton';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
-import auth from '@react-native-firebase/auth';
-import { Stack, router } from 'expo-router';
+import { supabase } from '@/lib/supabase';
+import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RegisterScreen() {
@@ -14,32 +14,51 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
-  
-  // function handleGoogleLogin() {
-  //   console.log('hi');
-    
-  //   onGoogleButtonPress()
-  // }
 
-  const onSignup = () => {
-    auth().createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      console.log('User account created & signed in!');
+  // const handleGoogleLogin = async () => {
+  //   const redirectUrl = Platform.select({
+  //     web: window.location.origin,
+  //     default: AuthSession.makeRedirectUri({ scheme: 'myapp' })
+  //   });
+
+  //   const { data, error } = await supabase.auth.signInWithOAuth({
+  //     provider: 'google',
+  //     options: { redirectTo: redirectUrl }
+  //   });
+
+  //   if (error) {
+  //     console.error('Google sign-in error:', error);
+  //   } else {
+  //     // data.url is the OAuth login URL; on web you'd navigate to it, on RN Expo it opens in Expo AuthSession :contentReference[oaicite:7]{index=7}
+  //     if (Platform.OS === 'web') {
+  //       window.location.href = data.url;
+  //     } else {
+  //       await AuthSession.startAsync({ authUrl: data.url, returnUrl: redirectUrl });
+  //     }
+  //   }
+  // };
+
+
+
+  async function signUpWithEmail() {
+    setLoading(true)
+    const {
+      data,
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
     })
-    .catch(error => {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
-      }
 
-      if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
-      }
-
-      console.error(error);
-    });
+    if (error) Alert.alert(error.message)
+    if (!data.session) Alert.alert('Please check your inbox for email verification!')
+    router.replace('/home')
+    setLoading(false)
   }
+
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -86,13 +105,13 @@ export default function RegisterScreen() {
 
           <AuthButton
             title="הירשם"
-            onPress={onSignup}
-            isLoading={isLoading}
+            onPress={signUpWithEmail}
+            isLoading={loading}
           />
         </View>
 
-        <SocialLoginButtons 
-        // onGooglePress={handleGoogleLogin}
+        <SocialLoginButtons
+          // onGooglePress={handleGoogleLogin}
         />
 
         <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">

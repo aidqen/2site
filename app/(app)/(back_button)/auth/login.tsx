@@ -2,43 +2,33 @@ import { AuthButton } from '@/components/auth/AuthButton';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
-import { Stack, router } from 'expo-router';
+import { supabase } from '@/lib/supabase';
+import * as Linking from 'expo-linking';
+import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
+  const router = useRouter()
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const auth = 
 
-  // const handleLogin = () => {
-  //   if (!email || !password) {
-  //     console.log('Please enter email and password');
-  //     return;
-  //   }
-
-  //   setIsLoading(true);
-  //   auth()
-  //     .signInWithEmailAndPassword(email, password)
-  //     .then(() => {
-  //       console.log('User signed in!');
-  //       setIsLoading(false);
-  //       router.replace('/(app)/home');
-  //     })
-  //     .catch(error => {
-  //       setIsLoading(false);
-  //       if (error.code === 'auth/invalid-email') {
-  //         console.log('That email address is invalid!');
-  //       } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-  //         console.log('Invalid email or password');
-  //       } else {
-  //         console.error('Login error:', error);
-  //       }
-  //     });
-  // };
+  async function signInWithEmail() {
+      setLoading(true)
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      })
+      console.log("🔍 ~ Auth ~ app/login_test.tsx:24 ~ data:", data.session)
+      
+    if (error) return Alert.alert(error.message)
+      router.replace('/home')
+    setLoading(false)
+  }
 
   // const handleGoogleLogin = async () => {
   //   console.log('Google login button pressed');
@@ -52,6 +42,29 @@ export default function LoginScreen() {
   //   }
   // };
 
+  const handleGoogleLogin = async () => {
+    // Build the deep link URL your app will handle
+    const redirectTo = Platform.select({
+      web: window.location.origin,
+      default: Linking.createURL('http://localhost:8081/home'),
+    });
+
+    // Initiate the OAuth flow
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo },
+    });
+    if (error) {
+      console.error('Error starting Google OAuth:', error);
+      return;
+    }
+
+    // On native: open the system browser for the OAuth URL
+    if (Platform.OS !== 'web' && data?.url) {
+      Linking.openURL(data.url);
+    }
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar style="dark" />
@@ -60,8 +73,8 @@ export default function LoginScreen() {
 
       <View className="flex-1 px-6 pt-[125px]">
         <View className="items-end mb-8">
-          <Text className="font-semibold text-[32px]" style={{ color: colors.primaryDarker }}>ברוכים השבים!</Text>
-          <Text className="font-semibold text-[32px] mb-2" style={{ color: colors.primaryDarker }}>טוב לראות אותך שוב</Text>
+          <Text className="font-bold text-[32px]" style={{ color: colors.primaryDarker }}>ברוכים השבים!</Text>
+          <Text className="font-bold text-[32px] mb-2" style={{ color: colors.primaryDarker }}>טוב לראות אותך שוב</Text>
         </View>
 
         <View className="w-full mb-6">
@@ -89,13 +102,13 @@ export default function LoginScreen() {
 
           <AuthButton
             title="התחבר"
-            // onPress={handleLogin}
-            isLoading={isLoading}
+            onPress={signInWithEmail}
+            isLoading={loading}
           />
         </View>
 
         <SocialLoginButtons
-        // onGooglePress={handleGoogleLogin}
+        onGooglePress={handleGoogleLogin}
         />
 
         <View className="absolute bottom-5 -translate-x-[50%] left-[50%] flex-row justify-center mt-6 gap-1">

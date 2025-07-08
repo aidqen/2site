@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function PasswordSuccessScreen() {
 
     const handleLogin = () => {
-        router.replace('/(auth)/login');
+        router.replace('/auth/login');
     };
 
     return (
