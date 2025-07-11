@@ -5,7 +5,7 @@ import { useAuth } from '@/context/AuthContext';
  * and authentication-related functionality
  */
 export function useUser() {
-  const { user, isLoading, isAuthenticated, logout, refreshUserData } = useAuth();
+  const { user, isLoading, isAdmin, isAuthenticated, logout, refreshUserData } = useAuth();
   
   return {
     user,
@@ -13,6 +13,7 @@ export function useUser() {
     isAuthenticated,
     logout,
     refreshUserData,
+    isAdmin,
     
     // Helper methods
     getUserId: () => user?.uid || null,

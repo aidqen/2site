@@ -13,7 +13,6 @@ const profileImage = require("../assets/images/profile.png");
 export default function Index() {
   const router = useRouter();
     const { user, isAuthenticated } = useUser()
-    console.log("🔍 ~ WelcomeScreen ~ app/welcome.tsx:10 ~ user:", isAuthenticated)
   
   
   // Load custom fonts if needed

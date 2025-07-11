@@ -7,7 +7,7 @@ interface SectionPreviewProps {
 }
 
 export function SectionPreview({ section, onPress }: SectionPreviewProps) {
-    console.log("🔍 ~ SectionPreview ~ components/SectionPreview.tsx:8 ~ section:", section)
+    // console.log("🔍 ~ SectionPreview ~ components/SectionPreview.tsx:8 ~ section:", section)
 
     const handlePress = () => {
         if (onPress) {

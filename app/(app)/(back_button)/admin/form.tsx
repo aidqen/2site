@@ -1,11 +1,11 @@
+import { DynamicForm } from '@/components/admin/DynamicForm';
+import { useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import { View } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
-import { DynamicForm } from '@/components/admin/DynamicForm';
 
 export default function AdminFormPage() {
-  const { type = 'video', isEdit = 'false' } = useLocalSearchParams<{ 
-    type: 'video' | 'category' | 'promotional';
+  const { type = 'lesson', isEdit = 'false' } = useLocalSearchParams<{ 
+    type: 'lesson' | 'category' | 'promotional';
     isEdit: string;
   }>();
   

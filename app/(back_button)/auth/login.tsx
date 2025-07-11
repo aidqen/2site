@@ -26,7 +26,8 @@ export default function LoginScreen() {
 
   async function signInWithEmail() {
     try {
-      await signInWithEmailAndPassword(getAuth(), email, password);
+      const result = await signInWithEmailAndPassword(getAuth(), email, password);
+      console.log("🔍 ~ LoginScreen ~ app/(back_button)/auth/login.tsx:29 ~ result:", result)
       router.replace('/home')
       console.log('User signed in successfully!');
     } catch (err) {

@@ -43,6 +43,7 @@ export default function RegisterScreen() {
           username,
           favoriteLessons: [],
           createdAt: firestore.FieldValue.serverTimestamp(),
+          isAdmin: false
         });
       router.replace('/home')
       console.log('User signed up successfully!');

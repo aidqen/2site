@@ -1,5 +1,5 @@
-import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import type { FirebaseAuthTypes } from '@react-native-firebase/auth';
+import { getAuth, onAuthStateChanged } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
@@ -7,6 +7,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 type User = FirebaseAuthTypes.User & {
   username?: string;
   favoriteLessons?: string[];
+  isAdmin?: boolean;
 };
 
 // Define the context value type
@@ -14,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   logout: () => Promise<void>;
   refreshUserData: () => Promise<void>;
 }
@@ -23,6 +25,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   isAuthenticated: false,
+  isAdmin: false,
   logout: async () => {},
   refreshUserData: async () => {},
 });
@@ -53,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           ...firebaseUser,
           username: userData?.username,
           favoriteLessons: userData?.favoriteLessons || [],
+          isAdmin: userData?.isAdmin || false,
         };
       }
       
@@ -110,6 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Context value
   const value = {
     user,
+    isAdmin: user?.isAdmin || false,
     isLoading,
     isAuthenticated: user !== null,
     logout,

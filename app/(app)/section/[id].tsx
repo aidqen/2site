@@ -5,6 +5,7 @@ import { PageContainer } from "@/components/PageContainer";
 import { SectionPreview } from "@/components/SectionPreview";
 import { CATEGORIES, SECTIONS } from "@/constants/mockData";
 import { Category, Section } from "@/types";
+import firestore from '@react-native-firebase/firestore';
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
@@ -17,7 +18,7 @@ export default function SectionDetails() {
   // Get section ID from URL params
   const params = useLocalSearchParams();
   const sectionId = params.id as string;
-  
+
   // State for section data
   const [section, setSection] = useState<Section | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -25,6 +26,7 @@ export default function SectionDetails() {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch section data
+  fetchSectionCategories()
   useEffect(() => {
     if (!sectionId) {
       setError("No section ID provided");
@@ -32,30 +34,48 @@ export default function SectionDetails() {
       return;
     }
 
+
+
     // Find the section with the matching ID
+
     const foundSection = SECTIONS.find(s => s.id === sectionId);
-    
+
     if (!foundSection) {
       setError("Section not found");
       setLoading(false);
       return;
     }
-    
+
     // Find categories for this section
     const foundCategories = CATEGORIES.filter(
       category => category.sectionId === sectionId
     );
-    
+
     setSection(foundSection);
     setCategories(foundCategories);
     setError(null);
     setLoading(false);
   }, [sectionId]);
 
+  async function fetchSectionCategories() {
+    const snapshot = await firestore()
+    .collection('categories')
+    .where('sectionId', '==', sectionId)
+    .get(); // one-time fetch
+    const foundCats: Category[] = snapshot.docs.map(doc => {
+      return {
+        id: doc.id,
+        ...doc.data()
+      } as Category
+    })
+    console.log("🔍 ~ SectionDetails ~ app/(app)/section/[id].tsx:60 ~ snapshot:", foundCats)
+    setCategories(foundCats)
+  }
+  
   // Handle category selection
   const handleCategoryPress = (id: string) => {
     // Navigate to category details or handle the action
-    console.log(`Category ${id} pressed`);
+    // console.log(`Category ${id} pressed`);
     router.push({ pathname: "/category/[id]", params: { id } });
   };
 
@@ -81,6 +101,7 @@ export default function SectionDetails() {
         description={section.description}
         paddingBottom={20}
       >
+        
         {categories.map((category) => (
           <SectionPreview
             key={category.id}

@@ -33,7 +33,7 @@ export default function ResetPasswordScreen() {
     // Simulate API call to reset password
     setTimeout(() => {
       setIsLoading(false);
-      router.push('/(auth)/password-success');
+      router.push('/auth/password-success');
     }, 1500);
   };
 
