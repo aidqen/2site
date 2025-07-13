@@ -4,7 +4,7 @@ import { Image, Text, TouchableOpacity, View } from "react-native";
 
 interface CategoryCardProps {
   category: Category;
-  onPress: (id: number) => void;
+  onPress: (id: string) => void;
 }
 
 export function CategoryCard({ category, onPress }: CategoryCardProps) {
@@ -23,10 +23,10 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
       activeOpacity={0.8}
     >
       <Image
-        source={{ uri: category.imgUrl }}
+        source={{ uri: category.img }}
         className="w-full h-[120px]"
         resizeMode="cover"
-        accessibilityLabel={category.title}
+        accessibilityLabel={category.name}
       />
       <View className="p-2 bg-white border-t" style={{ borderColor: colors.primaryDarker }}>
         <Text
@@ -34,7 +34,7 @@ export function CategoryCard({ category, onPress }: CategoryCardProps) {
           style={{ color: colors.primaryDarker }}
           numberOfLines={2}
         >
-          {category.title}
+          {category.name}
         </Text>
       </View>
     </TouchableOpacity>

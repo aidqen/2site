@@ -1,9 +1,9 @@
 import { BackButton } from "@/components/BackButton";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
-import { CATEGORIES } from "@/constants/mockData";
 import { colors } from "@/constants/styles";
 import { Category } from "@/types";
+import firestore from '@react-native-firebase/firestore';
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -18,25 +18,43 @@ export default function CategoryDetails() {
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    // Fetch category details
-    try {
-      if (!id) {
-        throw new Error("קטגוריה לא נמצאה");
-      }
-
-      const foundCategory = CATEGORIES.find(cat => cat.id === id);
-
-      if (!foundCategory) {
-        throw new Error("קטגוריה לא נמצאה");
-      }
-
-      setCategory(foundCategory);
+    if (!id) {
+      setError("No category ID provided");
       setLoading(false);
+      return;
+    }
+
+    // Fetch the category with the matching ID from Firestore
+    fetchCategoryById();
+    
+    // Note: Loading state and error handling are now managed inside fetchCategoryById
+  }, [id]);
+
+  async function fetchCategoryById() {
+    try {
+      // Option 1: If the route parameter 'id' is the Firestore document ID
+      const docSnapshot = await firestore()
+        .collection('categories')
+        .doc(id)
+        .get();
+      
+      // @ts-ignore: exists is a property, not a function
+      if (docSnapshot.exists) {
+        const categoryData = {
+          id: docSnapshot.id,
+          ...docSnapshot.data()
+        } as Category;
+        
+        setCategory(categoryData);
+        return;
+      }
+
     } catch (err) {
-      setError(err instanceof Error ? err.message : "שגיאה בטעינת הקטגוריה");
+      setError("שגיאה בטעינת הקטגוריה: " + (err instanceof Error ? err.message : String(err)));
+    } finally {
       setLoading(false);
     }
-  }, [id]);
+  }
 
   if (loading) {
     return <LoadingState />;
@@ -103,7 +121,7 @@ export default function CategoryDetails() {
               className="text-[28px] font-bold text-center text-[#12616f]"
               style={{ fontFamily: "IBMPlexSansHebrew-Bold" }}
             >
-              {category.title}
+              {category?.name}
             </Text>
 
             {/* Description */}
@@ -111,7 +129,7 @@ export default function CategoryDetails() {
               className="text-[20px] text-center mt-4 leading-6 text-[#333333]"
               style={{ fontFamily: "IBMPlexSansHebrew-Regular" }}
             >
-              {category.description}
+              {category?.description}
             </Text>
           </View>
 

@@ -3,7 +3,7 @@ import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
 import { PageContainer } from "@/components/PageContainer";
 import { SectionPreview } from "@/components/SectionPreview";
-import { CATEGORIES, SECTIONS } from "@/constants/mockData";
+import { SECTIONS } from "@/constants/mockData";
 import { Category, Section } from "@/types";
 import firestore from '@react-native-firebase/firestore';
 import { router, Stack, useLocalSearchParams } from "expo-router";
@@ -21,12 +21,11 @@ export default function SectionDetails() {
 
   // State for section data
   const [section, setSection] = useState<Section | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[] | undefined>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch section data
-  fetchSectionCategories()
   useEffect(() => {
     if (!sectionId) {
       setError("No section ID provided");
@@ -46,32 +45,31 @@ export default function SectionDetails() {
       return;
     }
 
-    // Find categories for this section
-    const foundCategories = CATEGORIES.filter(
-      category => category.sectionId === sectionId
-    );
+    // // Find categories for this section
+    // const foundCategories = CATEGORIES.filter(
+    //   category => category.sectionId === sectionId
+    // );
 
     setSection(foundSection);
-    setCategories(foundCategories);
+    fetchSectionCategories()
     setError(null);
     setLoading(false);
-  }, [sectionId]);
+  }, []);
 
   async function fetchSectionCategories() {
     const snapshot = await firestore()
-    .collection('categories')
-    .where('sectionId', '==', sectionId)
-    .get(); // one-time fetch
+      .collection('categories')
+      .where('sectionId', '==', sectionId)
+      .get(); // one-time fetch
     const foundCats: Category[] = snapshot.docs.map(doc => {
       return {
         id: doc.id,
         ...doc.data()
       } as Category
     })
-    console.log("🔍 ~ SectionDetails ~ app/(app)/section/[id].tsx:60 ~ snapshot:", foundCats)
     setCategories(foundCats)
   }
-  
+
   // Handle category selection
   const handleCategoryPress = (id: string) => {
     // Navigate to category details or handle the action
@@ -101,11 +99,12 @@ export default function SectionDetails() {
         description={section.description}
         paddingBottom={20}
       >
-        
-        {categories.map((category) => (
+
+        {categories.length > 0 && categories.map((category) => (
           <SectionPreview
             key={category.id}
-            section={category}
+            id={category.id}
+            title={category.name}
             onPress={() => handleCategoryPress(category.id)}
           />
         ))}

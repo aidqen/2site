@@ -1,9 +1,9 @@
 export interface Category {
   id: string;
-  name?: string;
+  name: string;
   img?: string;
   sectionId: string;
-  explanation?: string;
+  description?: string;
   index?: number;
 }
 

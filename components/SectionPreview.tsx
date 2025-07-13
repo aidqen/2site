@@ -2,22 +2,24 @@ import { colors } from "@/constants/styles";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 interface SectionPreviewProps {
-    section: any;
+    id: string;
+    imgUrl?: string;
+    title: string;
     onPress?: (id: string) => void;
 }
 
-export function SectionPreview({ section, onPress }: SectionPreviewProps) {
+export function SectionPreview({ id, imgUrl, title, onPress }: SectionPreviewProps) {
     // console.log("🔍 ~ SectionPreview ~ components/SectionPreview.tsx:8 ~ section:", section)
 
     const handlePress = () => {
         if (onPress) {
-            onPress(section.id);
+            onPress(id);
         }
     };
 
     return (
         <TouchableOpacity
-            key={section.id}
+            key={id}
             className="w-full mb-4 overflow-hidden rounded-2xl bg-white"
             style={{
                 shadowColor: '#000',
@@ -31,10 +33,10 @@ export function SectionPreview({ section, onPress }: SectionPreviewProps) {
         >
             <View className="relative">
                 <Image
-                    source={{ uri: section.imgUrl }}
+                    source={{ uri: imgUrl }}
                     className="w-full h-[200px]"
                     resizeMode="cover"
-                    accessibilityLabel={section.title}
+                    accessibilityLabel={title}
                 />
                 <View className="absolute bottom-0 w-full border rounded-b-2xl bg-white py-3 px-4"
                     style={{ borderColor: colors.primaryDarker }}>
@@ -42,7 +44,7 @@ export function SectionPreview({ section, onPress }: SectionPreviewProps) {
                         className="text-xl text-center font-semibold text-black"
                         style={{ color: colors.primaryDarker }}
                     >
-                        {section.title}
+                        {title}
                     </Text>
                 </View>
             </View>

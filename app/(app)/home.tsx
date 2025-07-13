@@ -43,8 +43,9 @@ export default function Home() {
             <View className="w-full gap-5 items-center">
                {sections.map((section: any, index: number) => (
                   <SectionPreview 
-                     section={section} 
-                     key={index} 
+                     id={section.id}
+                     imgUrl={section.imgUrl}
+                     title={section.title}
                      onPress={() => router.push({pathname: section.link, params: {id: section.id !== 'recommendations' ? section.id.toString() : ''}})} 
                   />
                ))}
