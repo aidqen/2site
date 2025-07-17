@@ -1,6 +1,8 @@
-import '@react-native-firebase/app';
 import { AuthProvider } from '@/context/AuthContext';
+import store from '@/store/reducer';
+import '@react-native-firebase/app';
 import { Stack } from "expo-router";
+import { Provider } from 'react-redux';
 import './globals.css';
 // Firebase is automatically initialized when importing the app module
 
@@ -10,19 +12,21 @@ import './globals.css';
 export default function RootLayout() {
   return (
     <AuthProvider>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: 'white' },
-          // Add smooth animations
-          animation: 'slide_from_right',
-          presentation: 'card',
-          animationDuration: 200,
-          // Add gesture-based navigation
-          gestureEnabled: true,
-          gestureDirection: 'horizontal',
-        }}
-      />
+      <Provider store={store}>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: 'white' },
+            // Add smooth animations
+            animation: 'slide_from_right',
+            presentation: 'card',
+            animationDuration: 200,
+            // Add gesture-based navigation
+            gestureEnabled: true,
+            gestureDirection: 'horizontal',
+          }}
+        />
+      </Provider>
     </AuthProvider>
   );
 }

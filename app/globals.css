@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.calc-top {
+    top: calc(50% - 48px)
+}

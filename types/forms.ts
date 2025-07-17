@@ -4,7 +4,7 @@ export type FormType = 'lesson' | 'category' | 'promotional';
 export interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'image' | 'dropdown' | 'video';
+  type: 'text' | 'textarea' | 'mainImage' | 'dropdown' | 'video' | 'images';
   placeholder?: string;
   options?: { label: string; value: string }[];
 }

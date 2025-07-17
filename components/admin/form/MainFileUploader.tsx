@@ -4,14 +4,14 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
 interface VideoUploaderProps {
-    onPress: () => void;
+    onPress?: () => void;
     label: string;
 }
 
 /**
  * Reusable video upload component for forms
  */
-export const VideoUploader: React.FC<VideoUploaderProps> = ({
+export const MainFileUploader: React.FC<VideoUploaderProps> = ({
     onPress,
 }) => {
     return (

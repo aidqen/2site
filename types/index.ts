@@ -10,5 +10,16 @@ export interface Category {
 export interface Section {
   id: string;
   title: string;
-  description: string;
+  description?: string;
+  link: string;
+  imgUrl: string;
+}
+
+export interface Lesson {
+  id: string;
+  name: string;
+  imgUrl?: string;
+  description?: string;
+  videoUrl: string;
+  index?: number;
 }

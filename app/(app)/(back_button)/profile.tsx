@@ -24,12 +24,16 @@ export default function ProfilePage() {
             onPress: () => router.push('/admin/form?type=lesson&isEdit=false')
         },
         {
-            title: "עריכת שיעורים באתר מלא",
-            onPress: () => router.push('/admin/form?type=lesson&isEdit=true')
+            title: "עריכת שיעורים באורך מלא",
+            onPress: () => router.push('/admin/form?type=lesson&isEdit=true&category=long')
         },
         {
             title: "עריכת שיעורים קצרים",
-            onPress: () => router.push('/admin/form?type=category&isEdit=true')
+            onPress: () => router.push('/admin/form?type=lesson&isEdit=true&category=short')
+        },
+        {
+            title: 'עריכת קטגוריה',
+            onPress: () => router.push('/home?isEdit=true')
         }
     ];
 

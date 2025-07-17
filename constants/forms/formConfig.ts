@@ -2,13 +2,36 @@ import { FormField, FormType } from '@/types/forms';
 
 // Form configuration based on type
 export const getFormConfig = (type: FormType): FormField[] => {
-  const commonFields = [
-    {
-      key: 'image',
-      label: 'תמונות ראשיות',
-      type: 'image' as const,
-    }
-  ];
+
+  const mainImageType = {
+    key: 'mainImage',
+    label: 'תמונה ראשית',
+    type: 'mainImage' as const,
+  }
+
+  const videoType = {
+    key: 'video',
+    label: 'סרטון',
+    type: 'video' as const,
+  }
+
+  const imagesType = {
+    key: 'images',
+    label: 'תמונה ראשית',
+    type: 'images' as const,
+  }
+
+  const descriptionsType = {
+    key: 'description',
+    label: 'הסבר על הסרטון',
+    type: 'textarea' as const,
+  }
+
+  const dropdownType = {
+    key: 'lessonType',
+    label: 'סוג שיעור',
+    type: 'dropdown' as const,
+  }
 
   switch (type) {
     case 'lesson':
@@ -24,9 +47,9 @@ export const getFormConfig = (type: FormType): FormField[] => {
           type: 'video' as const,
         },
         {
-          key: 'image',
+          key: 'images',
           label: 'תמונה ראשית',
-          type: 'image' as const,
+          type: 'images' as const,
         },
         {
           key: 'description',
@@ -51,7 +74,11 @@ export const getFormConfig = (type: FormType): FormField[] => {
           label: 'שם הקטגוריה',
           type: 'text' as const,
         },
-        ...commonFields,
+        {
+          key: 'mainImage',
+          label: 'תמונה ראשית',
+          type: 'mainImage' as const,
+        },
         {
           key: 'description',
           label: 'הסבר על סוגי האימונים',
@@ -65,7 +92,11 @@ export const getFormConfig = (type: FormType): FormField[] => {
           label: 'כותרת',
           type: 'text' as const,
         },
-        ...commonFields,
+        {
+          key: 'mainImage',
+          label: 'תמונה ראשית',
+          type: 'mainImage' as const,
+        },
         {
           key: 'link',
           label: 'לינק לאתר חיצוני',

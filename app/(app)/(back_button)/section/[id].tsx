@@ -1,31 +1,28 @@
-import { BackButton } from "@/components/BackButton";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
 import { PageContainer } from "@/components/PageContainer";
 import { SectionPreview } from "@/components/SectionPreview";
-import { SECTIONS } from "@/constants/mockData";
+import { sections } from "@/constants/mockData";
+import { SET_SELECTED_CATEGORY } from "@/store/reducer";
 import { Category, Section } from "@/types";
 import firestore from '@react-native-firebase/firestore';
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native";
+import { FlatList, SafeAreaView, View } from "react-native";
+import { useDispatch } from "react-redux";
 
-/**
- * SectionDetails page displays categories for a specific section
- * based on the section ID from the route parameters
- */
 export default function SectionDetails() {
-  // Get section ID from URL params
   const params = useLocalSearchParams();
   const sectionId = params.id as string;
+  const dispatch = useDispatch()
 
-  // State for section data
   const [section, setSection] = useState<Section | null>(null);
   const [categories, setCategories] = useState<Category[] | undefined>();
+  console.log("🔍 ~ SectionDetails ~ app/(back_button)/section/[id].tsx:17 ~ categories:", categories)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter()
 
-  // Fetch section data
   useEffect(() => {
     if (!sectionId) {
       setError("No section ID provided");
@@ -33,22 +30,13 @@ export default function SectionDetails() {
       return;
     }
 
-
-
-    // Find the section with the matching ID
-
-    const foundSection = SECTIONS.find(s => s.id === sectionId);
+    const foundSection = sections.find(s => s.id === sectionId);
 
     if (!foundSection) {
       setError("Section not found");
       setLoading(false);
       return;
     }
-
-    // // Find categories for this section
-    // const foundCategories = CATEGORIES.filter(
-    //   category => category.sectionId === sectionId
-    // );
 
     setSection(foundSection);
     fetchSectionCategories()
@@ -70,11 +58,10 @@ export default function SectionDetails() {
     setCategories(foundCats)
   }
 
-  // Handle category selection
-  const handleCategoryPress = (id: string) => {
-    // Navigate to category details or handle the action
-    // console.log(`Category ${id} pressed`);
-    router.push({ pathname: "/category/[id]", params: { id } });
+  const handleCategoryPress = (category: Category) => {
+  console.log("🔍 ~ SectionDetails ~ app/(app)/(back_button)/section/[id].tsx:61 ~ category:", category)
+    dispatch({type: SET_SELECTED_CATEGORY, category})
+    router.push({ pathname: "/category/[id]", params: { id: category.id } });
   };
 
   if (loading) {
@@ -91,23 +78,30 @@ export default function SectionDetails() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }} className="py-16">
-      <BackButton />
       <Stack.Screen options={{ headerShown: false }} />
 
       <PageContainer
         title={section.title}
         description={section.description}
         paddingBottom={20}
+        plusBtnAction={() => router.push('/admin/form?isEdit=false&type=category')}
       >
-
-        {categories.length > 0 && categories.map((category) => (
-          <SectionPreview
-            key={category.id}
-            id={category.id}
-            title={category.name}
-            onPress={() => handleCategoryPress(category.id)}
+        <View style={{ width: '100%' }}>
+          <FlatList
+            data={categories}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <SectionPreview
+                id={item.id}
+                title={item.name}
+                imgUrl={item.img}
+                onPress={() => handleCategoryPress(item)}
+              />
+            )}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ gap: 20, paddingBottom: 20 }}
           />
-        ))}
+        </View>
       </PageContainer>
     </SafeAreaView>
   );

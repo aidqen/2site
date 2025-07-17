@@ -13,12 +13,16 @@ interface DynamicFormProps {
   type: FormType;
   isEdit: boolean;
   onSubmit: (formData: FormData) => void;
+  editableContent?: any;
+  setEditableContent?: (content: any) => void;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
   type,
   isEdit,
   onSubmit,
+  editableContent,
+  setEditableContent,
 }) => {
   const router = useRouter();
   
@@ -29,7 +33,9 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   const formTitle = getFormTitle(type, isEdit);
   
   // Set up form state
-  const [formData, setFormData] = useState<FormData>(getInitialFormState());
+  const [formData, setFormData] = useState<FormData>(
+    isEdit && editableContent ? editableContent : getInitialFormState()
+  );
   const [mainImages, setMainImages] = useState<string[]>([]);
   
   // Form event handlers
@@ -57,7 +63,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
       {/* Form Header */}
       <View className="flex-row items-center mb-6">
         <Text
-          className="text-[24px] font-bold flex-1 text-right"
+          className="text-[24px] font-bold flex-1 text-center"
           style={{ color: colors.primaryDarker }}
         >
           {formTitle}

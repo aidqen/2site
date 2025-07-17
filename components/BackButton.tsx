@@ -11,7 +11,7 @@ export function BackButton() {
   return (
     <View style={{
       position: 'absolute',
-      top: 40,
+      top: 45,
       left: 20,
       zIndex: 10,
       width: 48,

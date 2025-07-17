@@ -1,8 +1,9 @@
 import { colors } from "@/constants/styles";
 import { useUser } from "@/hooks/useUser";
 import { Ionicons } from "@expo/vector-icons";
-import { ReactNode } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { usePathname } from "expo-router";
+import { ReactNode, useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface PageContainerProps {
   children: ReactNode;
@@ -10,6 +11,7 @@ interface PageContainerProps {
   description?: string;
   paddingBottom?: number;
   gap?: number;
+  plusBtnAction?: () => void;
 }
 
 /**
@@ -22,18 +24,21 @@ export function PageContainer({
   description,
   paddingBottom = 40,
   gap = 10,
+  plusBtnAction
 }: PageContainerProps) {
   const { isAdmin } = useUser()
+  const [isHome, setIsHome] = useState(false)
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsHome(pathname === "/home");
+  }, [])
+  
+  
   return (
-    <ScrollView
-      style={{ flex: 1, paddingHorizontal: 24 }}    // px-6
-      contentContainerStyle={{
-        flexGrow: 1,                                 // fills the screen
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        paddingBottom,
-        gap,
-      }}
+    <View
+      style={{ flex: 1, paddingHorizontal: 24, paddingBottom, gap }}    // px-6
+      className="flex-1 items-center justify-start"
     >
       {(title || description) && (
         <View
@@ -61,9 +66,10 @@ export function PageContainer({
           )}
         </View>
       )}
-      {isAdmin && <TouchableOpacity
+      {isAdmin && !isHome && plusBtnAction && <TouchableOpacity
         className="mb-4 h-[68px] w-full border rounded-2xl items-center justify-center"
         style={{ borderColor: colors.primaryDarker }}
+        onPress={plusBtnAction ? () => plusBtnAction() : () => {}}
       >
         <TouchableOpacity
           className="w-[41px] h-[41px] rounded-lg flex-row items-center justify-center"
@@ -73,7 +79,7 @@ export function PageContainer({
         </TouchableOpacity>
       </TouchableOpacity>}
       {children}
-    </ScrollView>
+    </View>
   );
 }
 

@@ -9,10 +9,8 @@ export const lessonTypeOptions = [
 ];
 
 export const categoryOptions = [
-  { label: 'מתחילים', value: 'beginners' },
-  { label: 'מתקדמים', value: 'advanced' },
-  { label: 'אימון בית', value: 'home' },
-  { label: 'אימון חוץ', value: 'outdoor' }
+  { label: 'שיעורים קצרים', value: 'short' },
+  { label: 'שיעורים ארוכים', value: 'long' },
 ];
 
 export const promotionalTextOptions = [
