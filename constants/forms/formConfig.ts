@@ -37,19 +37,19 @@ export const getFormConfig = (type: FormType): FormField[] => {
     case 'lesson':
       return [
         {
-          key: 'title',
+          key: 'name',
           label: 'כותרת לסרטון',
           type: 'text' as const,
         },
         {
-          key: 'video',
+          key: 'videoUrl',
           label: 'סרטון',
           type: 'video' as const,
         },
         {
-          key: 'images',
+          key: 'imgUrl',
           label: 'תמונה ראשית',
-          type: 'images' as const,
+          type: 'image' as const,
         },
         {
           key: 'description',
@@ -70,32 +70,37 @@ export const getFormConfig = (type: FormType): FormField[] => {
     case 'category':
       return [
         {
-          key: 'categoryName',
+          key: 'name',
           label: 'שם הקטגוריה',
           type: 'text' as const,
         },
         {
-          key: 'mainImage',
+          key: 'imgUrl',
           label: 'תמונה ראשית',
-          type: 'mainImage' as const,
+          type: 'mainImg' as const,
         },
         {
           key: 'description',
           label: 'הסבר על סוגי האימונים',
           type: 'textarea' as const,
+        },
+        {
+          key: 'sectionId',
+          label: 'שיוך לקטגוריה',
+          type: 'dropdown' as const,
         }
       ];
     case 'promotional':
       return [
         {
-          key: 'title',
+          key: 'name',
           label: 'כותרת',
           type: 'text' as const,
         },
         {
-          key: 'mainImage',
+          key: 'imgUrl',
           label: 'תמונה ראשית',
-          type: 'mainImage' as const,
+          type: 'mainImg' as const,
         },
         {
           key: 'link',

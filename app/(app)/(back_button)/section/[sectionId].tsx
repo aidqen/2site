@@ -12,13 +12,11 @@ import { FlatList, SafeAreaView, View } from "react-native";
 import { useDispatch } from "react-redux";
 
 export default function SectionDetails() {
-  const params = useLocalSearchParams();
-  const sectionId = params.id as string;
+  const { sectionId } = useLocalSearchParams();
   const dispatch = useDispatch()
 
   const [section, setSection] = useState<Section | null>(null);
   const [categories, setCategories] = useState<Category[] | undefined>();
-  console.log("🔍 ~ SectionDetails ~ app/(back_button)/section/[id].tsx:17 ~ categories:", categories)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter()
@@ -48,7 +46,7 @@ export default function SectionDetails() {
     const snapshot = await firestore()
       .collection('categories')
       .where('sectionId', '==', sectionId)
-      .get(); // one-time fetch
+      .get(); 
     const foundCats: Category[] = snapshot.docs.map(doc => {
       return {
         id: doc.id,
@@ -59,9 +57,8 @@ export default function SectionDetails() {
   }
 
   const handleCategoryPress = (category: Category) => {
-  console.log("🔍 ~ SectionDetails ~ app/(app)/(back_button)/section/[id].tsx:61 ~ category:", category)
-    dispatch({type: SET_SELECTED_CATEGORY, category})
-    router.push({ pathname: "/category/[id]", params: { id: category.id } });
+    dispatch({ type: SET_SELECTED_CATEGORY, category })
+    router.push({ pathname: "/category/[categoryId]", params: { categoryId: category.id } });
   };
 
   if (loading) {
@@ -94,7 +91,7 @@ export default function SectionDetails() {
               <SectionPreview
                 id={item.id}
                 title={item.name}
-                imgUrl={item.img}
+                imgUrl={item.imgUrl}
                 onPress={() => handleCategoryPress(item)}
               />
             )}

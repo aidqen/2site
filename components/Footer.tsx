@@ -14,7 +14,7 @@ export default function Footer() {
 
   // Navigation items for the footer
   const navItems = [
-    { icon: 'star', path: '/lessons' },
+    { icon: 'star', path: '/favorites' },
     { icon: 'home', path: '/home' },
     { icon: 'person', path: '/profile' },
   ];

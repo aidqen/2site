@@ -68,6 +68,11 @@ export const getFormConfig = (type: FormType, isEdit: boolean): FormConfig => {
             key: 'description',
             label: 'הסבר על סוגי האימונים',
             type: 'textarea' as const,
+          },
+          {
+            key: 'category',
+            label: 'שיוך לקטגוריה',
+            type: 'dropdown' as const,
           }
         ]
       };

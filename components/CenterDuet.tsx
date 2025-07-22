@@ -1,5 +1,5 @@
 import { colors } from "@/constants/styles";
-import storage from '@react-native-firebase/storage';
+import { getStorageDownloadUrl } from "@/services/lesson.service";
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
@@ -23,13 +23,14 @@ export function CenterDuet({
 }: CenterDuetProps) {
   const [imageUri, setImageUri] = useState('')
   useEffect(() => {
-    storage()
-    .ref(imageUrl)               // e.g. 'categories/fruits.png'
-    .getDownloadURL()             // returns the public URL
-    .then(url => setImageUri(url))     // save it to state
-}, [])
+    if (imageUrl) {
+      getStorageDownloadUrl(imageUrl)
+        .then(url => setImageUri(url))
+        .catch(console.error);
+    }
+  }, [imageUrl])
   return (
-    <View className="rounded-2xl shadow-md w-full bg-white overflow-hidden">
+    <View className="rounded-2xl shadow-md w-full bg-white overflow-hidden mb-32">
       <Image
         source={{ uri: imageUri }}
         className="w-full h-[240px]"

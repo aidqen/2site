@@ -1,4 +1,5 @@
 package com.dafnacaspi.yogapilates
+import com.google.android.gms.cast.framework.CastContext
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build
@@ -21,6 +22,9 @@ class MainActivity : ReactActivity() {
     SplashScreenManager.registerOnActivity(this)
     // @generated end expo-splashscreen
     super.onCreate(null)
+// @generated begin react-native-google-cast-onCreate - expo prebuild (DO NOT MODIFY) sync-5e616d57ec06f5b5c30139e226e4412bb505ab6f
+    CastContext.getSharedInstance(this)
+// @generated end react-native-google-cast-onCreate
   }
 
   /**

@@ -51,8 +51,8 @@ export default function CategoryDetails() {
     // }
 
     // Navigate to lesson detail page
-    const handleLessonPress = (lessonIndex: string) => {
-        router.push(`/lesson/${lessonIndex}`);
+    const handleLessonPress = (lessonId: string) => {
+        router.push(`/lesson/${lessonId}`);
     };
 
     return (
@@ -74,7 +74,7 @@ export default function CategoryDetails() {
                                     id={item.id}
                                     imgUrl={item.imgUrl}
                                     title={item.name}
-                                    onPress={() => handleLessonPress(item.index)}
+                                    onPress={() => handleLessonPress(item.id)}
                                     isLesson={true}
                                 />
                             )}

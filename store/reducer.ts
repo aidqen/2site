@@ -6,7 +6,8 @@ export const SET_CATEGORY_LESSONS = 'SET_CATEGORY_LESSONS'
 const initialState = {
     user: null,
     selectedCategory: null,
-    categoryLessons: null
+    categoryLessons: null,
+    selectedSection: ''
 }
 
 function reducer(state = initialState, action: any) {

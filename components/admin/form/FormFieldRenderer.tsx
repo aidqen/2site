@@ -1,5 +1,5 @@
-import { categoryOptions, lessonTypeOptions } from '@/constants/forms/formOptions';
 import { colors } from '@/constants/styles';
+import { Category } from '@/types';
 import { FormData, FormField, FormType } from '@/types/forms';
 import React from 'react';
 import { TextInput, View } from 'react-native';
@@ -9,13 +9,13 @@ import { MainFileUploader } from './MainFileUploader';
 
 interface FormFieldRendererProps {
   field: FormField;
-  formData: FormData;
+  formData: Category | FormData;
   formType: FormType;
   onInputChange: (key: string, value: string) => void;
-  mainImages: string[];
+  image?: string | undefined;
   onAddImage: () => void;
-  editableContent?: any;
-  setEditableContent?: (content: any) => void;
+  selectedSection: 'long' | 'short';
+  setSelectedSection: (type: 'long' | 'short') => void;
 }
 
 export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
@@ -23,18 +23,22 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
   formData,
   formType,
   onInputChange,
-  mainImages,
+  image,
   onAddImage,
-  editableContent,
-  setEditableContent
+  selectedSection,
+  setSelectedSection
 }) => {
+  // Helper function to safely access form data properties
+  const getFormValue = (key: string): string => {
+    return (key in formData) ? (formData as any)[key] || '' : '';
+  };
 
   switch (field.type) {
     case 'text':
       return (
         <TextInput
           key={field.key}
-          value={formData[field.key] || ''}
+          value={getFormValue(field.key) || ''}
           onChangeText={(value) => onInputChange(field.key, value)}
           placeholder={field.label || field.placeholder}
           placeholderTextColor={colors.primaryDarker}
@@ -50,7 +54,7 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       return (
         <View key={field.key} className="mb-4">
           <TextInput
-            value={formData[field.key] || ''}
+            value={getFormValue(field.key) || ''}
             onChangeText={(value) => onInputChange(field.key, value)}
             placeholder={field.label || field.placeholder}
             placeholderTextColor={colors.primaryDarker}
@@ -66,52 +70,54 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
           />
         </View>
       );
-    case 'images':
+    case 'image':
       return (
         <ImageUploader
           key={field.key}
           onPress={onAddImage}
-          images={mainImages}
+          image={image}
           label={field.label}
         />
       );
     case 'video':
-    case 'mainImage':
+    case 'mainImg':
       return (
         <MainFileUploader
           key={field.key}
           label={field.label}
+          type={field.type}
+          fileUrl={getFormValue(field.key)}
+          onFileUploaded={(path) => onInputChange(field.key, path)}
         />
       );
     case 'dropdown':
-      // For lesson form, render two dropdowns side by side
       if (formType === 'lesson' && (field.key === 'lessonType' || field.key === 'category')) {
         if (field.key === 'lessonType') {
           return (
             <View key={field.key} style={{ marginBottom: 16 }}>
               {/* <View style={{ marginBottom: 16 }}> */}
                 <FormDropdown
-                  type="lesson"
+                  type="category"
                   triggerLabel="סוג שיעור"
-                  options={lessonTypeOptions}
-                  value={formData.lessonType}
-                  onValueChange={(value) => onInputChange('lessonType', value as string)}
+                  value={selectedSection}
+                  onValueChange={(value) => {
+                    if (value === 'long' || value === 'short') {
+                      setSelectedSection(value);
+                    }
+                  }}
                   dropDownDirection="BOTTOM"
                   zIndex={3000}
-                />
-              {/* </View>
-              
-              <View style={{ marginTop: 16 }}> */}
+                  selectedSection={selectedSection}
+                  />
                 <FormDropdown
-                  type="category"
+                  type="lesson"
                   triggerLabel="שיוך לקטגוריה"
-                  options={categoryOptions}
-                  value={formData.category}
+                  value={getFormValue('category') || ''}
                   onValueChange={(value) => onInputChange('category', value as string)}
                   dropDownDirection="TOP"
                   zIndex={2000}
+                  selectedSection={selectedSection}
                 />
-              {/* </View> */}
             </View>
           );
         }

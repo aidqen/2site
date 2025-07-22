@@ -2,6 +2,8 @@ import { AuthProvider } from '@/context/AuthContext';
 import store from '@/store/reducer';
 import '@react-native-firebase/app';
 import { Stack } from "expo-router";
+import React from 'react';
+import { I18nManager } from 'react-native';
 import { Provider } from 'react-redux';
 import './globals.css';
 // Firebase is automatically initialized when importing the app module
@@ -10,6 +12,9 @@ import './globals.css';
  * Root layout component that sets up the app structure
  */
 export default function RootLayout() {
+  I18nManager.allowRTL(false);
+  I18nManager.forceRTL(false);
+
   return (
     <AuthProvider>
       <Provider store={store}>

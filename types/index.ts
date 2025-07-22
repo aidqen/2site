@@ -1,7 +1,9 @@
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+
 export interface Category {
   id: string;
   name: string;
-  img?: string;
+  imgUrl?: string;
   sectionId: string;
   description?: string;
   index?: number;
@@ -21,5 +23,13 @@ export interface Lesson {
   imgUrl?: string;
   description?: string;
   videoUrl: string;
-  index?: number;
+  index: number;
+  category?: {name: string, id: string}
+}
+
+export interface FavoriteLesson {
+  id: string;
+  name: string;
+  imgUrl?: string;
+  addedAt: Date | FirebaseFirestoreTypes.FieldValue;
 }

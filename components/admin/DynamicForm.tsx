@@ -2,43 +2,47 @@ import { MainButton } from '@/components/ui/MainButton';
 import { getFormConfig } from '@/constants/forms/formConfig';
 import { getFormTitle, getInitialFormState } from '@/constants/forms/formOptions';
 import { colors } from '@/constants/styles';
+import { createCategory, updateCategory } from '@/services/category.service';
+import { SET_SELECTED_CATEGORY } from '@/store/reducer';
+import { Category } from '@/types';
 import { FormData, FormType } from '@/types/forms';
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDispatch } from 'react-redux';
 import { FormFieldRenderer } from './form/FormFieldRenderer';
 
 interface DynamicFormProps {
   type: FormType;
   isEdit: boolean;
   onSubmit: (formData: FormData) => void;
-  editableContent?: any;
-  setEditableContent?: (content: any) => void;
+  content?: any;
 }
 
 export const DynamicForm: React.FC<DynamicFormProps> = ({
   type,
   isEdit,
   onSubmit,
-  editableContent,
-  setEditableContent,
+  content
 }) => {
-  const router = useRouter();
-  
-  // Get form fields configuration
+  console.log("🚀 ~ isEdit:", isEdit)
+  console.log("🚀 ~ type:", type)
+  const dispatch = useDispatch()
   const formFields = getFormConfig(type);
-  
-  // Get form title
+  console.log("🚀 ~ formFields:", formFields)
   const formTitle = getFormTitle(type, isEdit);
-  
-  // Set up form state
-  const [formData, setFormData] = useState<FormData>(
-    isEdit && editableContent ? editableContent : getInitialFormState()
-  );
-  const [mainImages, setMainImages] = useState<string[]>([]);
-  
-  // Form event handlers
+  const [selectedSection, setSelectedSection] = useState<'long' | 'short'>('short')
+  const [formData, setFormData] = useState<Category | FormData>(content || getInitialFormState());
+  console.log("🚀 ~ formData:", formData)
+
+
+  useEffect(() => {
+    if (content) {
+      setFormData(content);
+    }
+  }, [content])
+
+
   const handleInputChange = (key: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -47,15 +51,20 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   };
 
   const handleSubmit = () => {
-    onSubmit(formData);
+    if (type === 'category') {
+      if (isEdit) {
+        updateCategory(formData as Category)
+        dispatch({type: SET_SELECTED_CATEGORY, category: formData as Category})
+      } else {
+        createCategory(formData as Category)
+      }
+    }
   };
 
   const handleAddImage = () => {
-    // This would typically integrate with image picker
     console.log('Add image functionality would be implemented here');
   };
-  
-  // Determine the submit button text based on isEdit
+
   const submitButtonText = isEdit ? 'עדכון' : 'הוספה';
 
   return (
@@ -69,7 +78,7 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
           {formTitle}
         </Text>
       </View>
-      
+
       {/* Form Fields */}
       <ScrollView
         className="flex-1"
@@ -83,12 +92,14 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
             formData={formData}
             formType={type}
             onInputChange={handleInputChange}
-            mainImages={mainImages}
+            image={formData?.imgUrl ? formData.imgUrl : ''}
             onAddImage={handleAddImage}
+            selectedSection={selectedSection}
+            setSelectedSection={setSelectedSection}
           />
         ))}
       </ScrollView>
-      
+
       {/* Form Footer with Submit Button */}
       <View style={{
         position: 'absolute',

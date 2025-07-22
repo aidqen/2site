@@ -1,6 +1,6 @@
 import { colors } from "@/constants/styles";
+import { getStorageDownloadUrl } from "@/services/lesson.service";
 import { Ionicons } from "@expo/vector-icons";
-import storage from '@react-native-firebase/storage';
 import { useEffect, useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
@@ -18,13 +18,15 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false }:
     // console.log("🔍 ~ SectionPreview ~ components/SectionPreview.tsx:8 ~ section:", section)
 
     useEffect(() => {
-        storage()
-            .ref(imgUrl)               // e.g. 'categories/fruits.png'
-            .getDownloadURL()             // returns the public URL
-            .then(url => setUri(url))     // save it to state
-            .catch(console.error)
-            .finally(() => setLoading(false));
-    }, [])
+        if (imgUrl) {
+            getStorageDownloadUrl(imgUrl)
+                .then(url => setUri(url))
+                .catch(console.error)
+                .finally(() => setLoading(false));
+        } else {
+            setLoading(false);
+        }
+    }, [imgUrl])
 
 
     const handlePress = () => {
@@ -33,10 +35,7 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false }:
         }
     };
 
-    async function fetchImageUrl(path: string) {
-        const ref = storage().ref(path)
-        return ref.getDownloadURL()
-    }
+    // Function moved to firebase.service.ts
 
     return (
         <TouchableOpacity

@@ -1,7 +1,7 @@
 import { colors } from '@/constants/styles';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useState } from 'react';
-import { Text, TextInput, TextInputProps, View } from 'react-native';
+import { Text, TextInput, TextInputProps, TouchableOpacity, View } from 'react-native';
 
 interface AuthInputProps extends TextInputProps {
   label?: string;
@@ -18,6 +18,13 @@ export function AuthInput({
   ...props
 }: AuthInputProps) {
   const [isPasswordSeen, setIsPasswordSeen] = useState(false)
+
+  function passwordSeenTimeout() {
+    setIsPasswordSeen(true)
+    setTimeout(() => {
+      setIsPasswordSeen(false)
+    }, 1500)
+  }
   return (
     <View className="w-full mb-4">
       {label && (
@@ -33,7 +40,9 @@ export function AuthInput({
           placeholder={placeholder}
           {...props}
         />
-        {isPassword && <Ionicons name="eye-outline" onPress={() => setIsPasswordSeen(!isPasswordSeen)} size={24} color={colors.primaryDarker} className='absolute left-3.5 -translate-y-[50%] top-[50%]' />}
+        {isPassword && <TouchableOpacity onPress={passwordSeenTimeout} className='absolute left-3.5 -translate-y-[50%] top-[50%]'>
+          <Ionicons name="eye-outline" size={24} color={colors.primaryDarker} />
+        </TouchableOpacity>}
       </View>
       {error && (
         <Text className="font-ibm-regular text-xs text-[#FF6B6B] mt-1 text-right">{error}</Text>

@@ -3,9 +3,9 @@ import { EditButton } from "@/components/EditButton";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
 import { colors } from "@/constants/styles";
+import { fetchLessonsByCategory } from "@/services/lesson.service";
 import { SET_CATEGORY_LESSONS } from "@/store/reducer";
 import { Lesson } from "@/types";
-import firestore from '@react-native-firebase/firestore';
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -17,16 +17,16 @@ export default function CategoryDetails() {
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets()
   const router = useRouter()
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { categoryId } = useLocalSearchParams<{ categoryId: string }>();
 
   const category = useSelector((state: any) => state.selectedCategory)
   const lessons = useSelector((state: any) => state.categoryLessons)
-  console.log("🔍 ~ CategoryDetails ~ app/(app)/(back_button)/category/[id].tsx:15 ~ selectedCategory:", category)
+  console.log("🚀 ~ CategoryDetails ~ lessons:", lessons)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) {
+    if (!categoryId) {
       setError("No category ID provided");
       setLoading(false);
       return;
@@ -34,33 +34,13 @@ export default function CategoryDetails() {
 
     fetchCategoryLessons();
 
-  }, [id]);
+  }, [categoryId]);
 
 
   async function fetchCategoryLessons() {
     try {
       setLoading(true);
-      // Get category details
-      // const snapshot = await firestore()
-      //     .collection('categories')
-      //     .doc(id)
-      //     .get();
-      // setCategory(snapshot.data() as Category);
-
-      // Get lessons for this category
-      const lessonsSnapshot = await firestore()
-        .collection('categories')
-        .doc(id)
-        .collection('lessons')
-        .orderBy('index')
-        .get();
-
-      // Map the lessons data and include the document ID
-      const lessons = lessonsSnapshot.docs.map((doc: any) => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Lesson[];
-
+      const lessons = await fetchLessonsByCategory(categoryId);
       dispatch({ type: SET_CATEGORY_LESSONS, lessons })
 
     } catch (error) {
@@ -71,35 +51,11 @@ export default function CategoryDetails() {
   }
 
   function routeToEdit() {
-    router.push(`/admin/form?type=category&isEdit=true&id=${id}`)
+    router.push(`/admin/form?type=category&isEdit=true&id=${categoryId}`)
   }
-  // async function fetchCategoryById() {
-  //   try {
-  //     const docSnapshot = await firestore()
-  //       .collection('categories')
-  //       .doc(id)
-  //       .get();
-
-  //     // @ts-ignore: exists is a property, not a function
-  //     if (docSnapshot.exists) {
-  //       const categoryData = {
-  //         id: docSnapshot.id,
-  //         ...docSnapshot.data()
-  //       } as Category;
-
-  //       setCategory(categoryData);
-  //       return;
-  //     }
-
-  //   } catch (err) {
-  //     setError("שגיאה בטעינת הקטגוריה: " + (err instanceof Error ? err.message : String(err)));
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }
 
   function navigateToLesson() {
-    router.push({ pathname: '/lesson/[index]', params: { index: '0' } })
+    router.push({ pathname: '/lesson/[lessonId]', params: { lessonId: lessons.find((lesson: Lesson) => lesson.index === 1)?.id } })
   }
 
   if (loading) {
@@ -107,7 +63,6 @@ export default function CategoryDetails() {
   }
 
   if (error || !category) {
-    console.log("🔍 ~ CategoryDetails ~ app/(app)/(back_button)/category/[id].tsx:105 ~ category:", category)
     return <ErrorState message={error || "לא נמצא מידע על קטגוריה זו"} />;
   }
 

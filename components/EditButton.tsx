@@ -4,10 +4,9 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import { usePathname } from "expo-router";
 import { TouchableOpacity, View } from "react-native";
 
-export function EditButton({isEdit, onPress}: {isEdit?: boolean, onPress: () => void}) {
+export function EditButton({isEdit, onPress}: {isEdit?: boolean, onPress?: () => void}) {
     const pathname = usePathname()
     const { isAdmin } = useUser()
-    console.log("🔍 ~ EditButton ~ components/EditButton.tsx:6 ~ pathname:", pathname)
     if (!isAdmin) return null
 
     return (

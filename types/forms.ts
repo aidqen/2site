@@ -4,18 +4,18 @@ export type FormType = 'lesson' | 'category' | 'promotional';
 export interface FormField {
   key: string;
   label: string;
-  type: 'text' | 'textarea' | 'mainImage' | 'dropdown' | 'video' | 'images';
+  type: 'text' | 'textarea' | 'mainImg' | 'dropdown' | 'video' | 'image' | 'imgUrl';
   placeholder?: string;
   options?: { label: string; value: string }[];
 }
 
 export interface FormData {
-  title: string;
-  categoryName: string;
-  description: string;
-  link: string;
-  lessonType: string;
-  category: string;
-  text: string;
-  [key: string]: string;
+  title?: string;
+  categoryName?: string;
+  description?: string;
+  link?: string;
+  lessonType?: string;
+  category?: string;
+  imgUrl?: string;
+  sectionId?: "long" | "short";
 }

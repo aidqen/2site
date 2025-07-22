@@ -1,12 +1,12 @@
 import { colors } from "@/constants/styles";
 import { useUser } from "@/hooks/useUser";
-import { Ionicons } from "@expo/vector-icons";
 import { usePathname } from "expo-router";
 import { ReactNode, useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
+import { PlusButton } from "./PlusButton";
 
 interface PageContainerProps {
-  children: ReactNode;
+  children?: ReactNode;
   title?: string;
   description?: string;
   paddingBottom?: number;
@@ -38,7 +38,7 @@ export function PageContainer({
   return (
     <View
       style={{ flex: 1, paddingHorizontal: 24, paddingBottom, gap }}    // px-6
-      className="flex-1 items-center justify-start"
+      className="flex-1 items-center justify-start pb-10"
     >
       {(title || description) && (
         <View
@@ -66,20 +66,8 @@ export function PageContainer({
           )}
         </View>
       )}
-      {isAdmin && !isHome && plusBtnAction && <TouchableOpacity
-        className="mb-4 h-[68px] w-full border rounded-2xl items-center justify-center"
-        style={{ borderColor: colors.primaryDarker }}
-        onPress={plusBtnAction ? () => plusBtnAction() : () => {}}
-      >
-        <TouchableOpacity
-          className="w-[41px] h-[41px] rounded-lg flex-row items-center justify-center"
-          style={{ borderColor: colors.primaryDarker, backgroundColor: colors.primaryDarker }}
-        >
-          <Ionicons name="add" size={35} color={'white'} />
-        </TouchableOpacity>
-      </TouchableOpacity>}
+      {isAdmin && !isHome && plusBtnAction && <PlusButton onPress={plusBtnAction} />}
       {children}
     </View>
   );
 }
-

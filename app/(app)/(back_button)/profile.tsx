@@ -24,17 +24,13 @@ export default function ProfilePage() {
             onPress: () => router.push('/admin/form?type=lesson&isEdit=false')
         },
         {
-            title: "עריכת שיעורים באורך מלא",
-            onPress: () => router.push('/admin/form?type=lesson&isEdit=true&category=long')
+            title: 'הוספת קטגוריה חדשה',
+            onPress: () => router.push('/admin/form?type=category&isEdit=false')
         },
         {
-            title: "עריכת שיעורים קצרים",
-            onPress: () => router.push('/admin/form?type=lesson&isEdit=true&category=short')
+            title: 'הוספת תוכן שיווקי',
+            onPress: () => router.push('/admin/form?type=promotional&isEdit=false')
         },
-        {
-            title: 'עריכת קטגוריה',
-            onPress: () => router.push('/home?isEdit=true')
-        }
     ];
 
     const adminPromotionalButtons: ButtonItem[] = [
