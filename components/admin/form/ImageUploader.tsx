@@ -19,7 +19,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
   label = 'תמונות ראשיות'
 }) => {
   const [imgUrl, setImgUrl] = useState<string | undefined>(image)
-  console.log('imgUrl', imgUrl);
 
 
   useEffect(() => {

@@ -3,7 +3,7 @@ import { EditButton } from "@/components/EditButton";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
 import { colors } from "@/constants/styles";
-import { fetchLessonsByCategory } from "@/services/lesson.service";
+import { fetchLessonsByCategory, getStorageDownloadUrl } from "@/services/lesson.service";
 import { SET_CATEGORY_LESSONS } from "@/store/reducer";
 import { Lesson } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,6 +24,7 @@ export default function CategoryDetails() {
   console.log("🚀 ~ CategoryDetails ~ lessons:", lessons)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [categoryImageUrl, setCategoryImageUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (!categoryId) {
@@ -31,10 +32,21 @@ export default function CategoryDetails() {
       setLoading(false);
       return;
     }
-
+    
     fetchCategoryLessons();
 
   }, [categoryId]);
+
+  // Fetch category image URL when category changes
+  useEffect(() => {
+    if (category && category.imgUrl) {
+      getStorageDownloadUrl(category.imgUrl)
+        .then((url) => setCategoryImageUrl(url))
+        .catch((error) => {
+          console.error('Error fetching category image URL:', error);
+        });
+    }
+  }, [category]);
 
 
   async function fetchCategoryLessons() {
@@ -82,7 +94,7 @@ export default function CategoryDetails() {
       >
         <View className="relative">
           <Image
-            source={{ uri: "https://res.cloudinary.com/di6tqrg5y/image/upload/v1751113343/4_1_no5ofb.png" }}
+            source={{ uri: categoryImageUrl || "https://res.cloudinary.com/di6tqrg5y/image/upload/v1751113343/4_1_no5ofb.png" }}
             style={{
               width: '100%',
               height: 550,

@@ -6,6 +6,6 @@ const pickImage = async () => {
       quality: 1,
     });
     if (result.didCancel) return;
-    return result.assets[0].uri
+    return result.assets?.[0].uri
     // setImageUri(result.assets[0].uri);
   };

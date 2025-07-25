@@ -29,12 +29,28 @@ export const getFormTitle = (type: FormType, isEdit: boolean): string => {
 };
 
 // Initial form state
-export const getInitialFormState = () => ({
-  name: '',
-  description: '',
-  imgUrl: '',
-  videoUrl: '',
-  lessonType: '',
-  category: '',
-  text: ''
-});
+export const getInitialFormState = ({ type }: { type: string }) => {
+  switch (type) {
+    case 'lesson':
+      return {
+        name: '',
+        description: '',
+        imgUrl: '',
+        videoUrl: '',
+        lessonType: '',
+        category: '',
+        text: ''
+      }
+    case 'category':
+      return {
+        name: '',
+        imgUrl: '',
+        sectionId: '',
+        description: '',
+        index: ''
+      }
+
+    default:
+      break;
+  }
+};

@@ -42,7 +42,7 @@ export default function RegisterScreen() {
         .set({
           username,
           favoriteLessons: [],
-          createdAt: firestore.FieldValue.serverTimestamp(),
+          createdAt: Date.now(),
           isAdmin: false
         });
       router.replace('/home')

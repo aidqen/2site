@@ -71,9 +71,9 @@ export const MainFileUploader: React.FC<VideoUploaderProps> = ({
         <TouchableOpacity
             className="mb-4 h-[146px] relative border rounded-lg items-center justify-center"
             style={{ borderColor: colors.primaryDarker }}
+            onPress={pickFromGallery}
         >
             {type === 'mainImg' && uri && <Image source={{uri}} className="w-full h-full rounded-lg" resizeMode="cover"/>}
-            {/* {type === 'video' && <Video source={{uri}} className="w-full h-full rounded-lg" resizeMode="cover"/>} */}
             {isUploading ? (
                 <ActivityIndicator size="large" color={colors.primaryDarker} />
             ) : (

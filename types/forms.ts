@@ -10,12 +10,16 @@ export interface FormField {
 }
 
 export interface FormData {
+  id?: string;
   title?: string;
+  name?: string;
   categoryName?: string;
   description?: string;
   link?: string;
   lessonType?: string;
   category?: string;
   imgUrl?: string;
-  sectionId?: "long" | "short";
+  videoUrl?: string;
+  categoryId?: string;
+  sectionId: "long" | "short";
 }

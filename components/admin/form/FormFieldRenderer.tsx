@@ -3,6 +3,7 @@ import { Category } from '@/types';
 import { FormData, FormField, FormType } from '@/types/forms';
 import React from 'react';
 import { TextInput, View } from 'react-native';
+import { DropdownFieldRenderer } from './DropdownFieldRenderer';
 import { FormDropdown } from './FormDropdown';
 import { ImageUploader } from './ImageUploader';
 import { MainFileUploader } from './MainFileUploader';
@@ -91,38 +92,17 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         />
       );
     case 'dropdown':
-      if (formType === 'lesson' && (field.key === 'lessonType' || field.key === 'category')) {
-        if (field.key === 'lessonType') {
-          return (
-            <View key={field.key} style={{ marginBottom: 16 }}>
-              {/* <View style={{ marginBottom: 16 }}> */}
-                <FormDropdown
-                  type="category"
-                  triggerLabel="סוג שיעור"
-                  value={selectedSection}
-                  onValueChange={(value) => {
-                    if (value === 'long' || value === 'short') {
-                      setSelectedSection(value);
-                    }
-                  }}
-                  dropDownDirection="BOTTOM"
-                  zIndex={3000}
-                  selectedSection={selectedSection}
-                  />
-                <FormDropdown
-                  type="lesson"
-                  triggerLabel="שיוך לקטגוריה"
-                  value={getFormValue('category') || ''}
-                  onValueChange={(value) => onInputChange('category', value as string)}
-                  dropDownDirection="TOP"
-                  zIndex={2000}
-                  selectedSection={selectedSection}
-                />
-            </View>
-          );
-        }
-        return null; // Skip the second dropdown as we've already rendered both
-      }
+      return (
+        <DropdownFieldRenderer
+          key={field.key}
+          field={field}
+          formType={formType}
+          value={getFormValue(field.key)}
+          onValueChange={onInputChange}
+          selectedSection={selectedSection}
+          setSelectedSection={setSelectedSection}
+        />
+      );
 
     default:
       return null;

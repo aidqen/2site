@@ -24,6 +24,7 @@ export interface Lesson {
   description?: string;
   videoUrl: string;
   index: number;
+  categoryId?: string;
   category?: {name: string, id: string}
 }
 
@@ -31,5 +32,5 @@ export interface FavoriteLesson {
   id: string;
   name: string;
   imgUrl?: string;
-  addedAt: Date | FirebaseFirestoreTypes.FieldValue;
+  addedAt: Date | FirebaseFirestoreTypes.FieldValue | number | null;
 }

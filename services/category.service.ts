@@ -1,5 +1,5 @@
 import { Category } from '@/types';
-import firestore from '@react-native-firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, query, updateDoc, where } from '@react-native-firebase/firestore';
 
 // Category type definition
 // export interface Category {
@@ -13,15 +13,15 @@ import firestore from '@react-native-firebase/firestore';
 
 export const fetchCategoriesBySection = async (sectionId: 'long' | 'short'): Promise<Array<{label: string, value: string}>> => {
   try {
-    const categoriesSnapshot = await firestore()
-      .collection('categories')
-      .where('sectionId', '==', sectionId)
-      .get();
+    const db = getFirestore();
+    const categoriesRef = collection(db, 'categories');
+    const q = query(categoriesRef, where('sectionId', '==', sectionId));
+    const categoriesSnapshot = await getDocs(q);
     
     if (!categoriesSnapshot.empty) {
-      return categoriesSnapshot.docs.map(doc => ({
-        label: doc.data().name || '',
-        value: doc.id
+      return categoriesSnapshot.docs.map(docSnap => ({
+        label: docSnap.data().name || '',
+        value: docSnap.id
       }));
     }
     return [];
@@ -38,13 +38,14 @@ export const fetchCategoriesBySection = async (sectionId: 'long' | 'short'): Pro
  */
 export const createCategory = async (category: Omit<Category, 'id'>): Promise<{ status: string; category: Category | null }> => {
   try {
-    const categoryRef = await firestore().collection('categories').add({
+    const db = getFirestore();
+    const categoriesRef = collection(db, 'categories');
+    const categoryRef = await addDoc(categoriesRef, {
       name: category.name,
       description: category.description || '',
       imgUrl: category.imgUrl || '',
       index: category.index,
       sectionId: category.sectionId,
-      createdAt: firestore.FieldValue.serverTimestamp(),
     });
     
     const newCategory = { 
@@ -65,6 +66,33 @@ export const createCategory = async (category: Omit<Category, 'id'>): Promise<{ 
   }
 };
 
+
+
+export const fetchCategoryById = async (categoryId: string): Promise<Category | null> => {
+  try {
+    const db = getFirestore();
+    const categoryRef = doc(db, 'categories', categoryId);
+    const docSnap = await getDoc(categoryRef);
+    
+    if (!docSnap.exists()) {
+      console.log('No category found with the specified ID');
+      return null;
+    }
+
+    const data = docSnap.data();
+    return {
+      id: docSnap.id,
+      name: data?.name || '',
+      imgUrl: data?.imgUrl,
+      sectionId: data?.sectionId || '',
+      description: data?.description,
+      index: data?.index
+    };
+  } catch (error) {
+    console.error("Error fetching category:", error);
+    throw error;
+  }
+};
 /**
  * Updates an existing category in Firestore
  * @param category The category object with updated fields
@@ -76,9 +104,10 @@ export const updateCategory = async (category: Category): Promise<{ status: stri
       throw new Error('Category ID is required for updates');
     }
     
-    const categoryRef = firestore().collection('categories').doc(category.id);
+    const db = getFirestore();
+    const categoryRef = doc(db, 'categories', category.id);
     
-    await categoryRef.update({
+    await updateDoc(categoryRef, {
       name: category.name,
       description: category.description,
       imgUrl: category.imgUrl,
@@ -100,39 +129,65 @@ export const updateCategory = async (category: Category): Promise<{ status: stri
 };
 
 /**
- * Deletes a category from Firestore
+ * Deletes a category from Firestore and all lessons associated with it
  * @param categoryId The ID of the category to delete
  * @returns Object with status of the operation
  */
 export const deleteCategory = async (categoryId: string): Promise<{ status: string }> => {
   try {
-    await firestore().collection('categories').doc(categoryId).delete();
+    const db = getFirestore();
+    
+    // First, find all lessons with this categoryId
+    const lessonsRef = collection(db, 'lessons');
+    const q = query(lessonsRef, where('categoryId', '==', categoryId));
+    const lessonsSnapshot = await getDocs(q);
+    
+    // Check if there are any lessons to delete
+    if (!lessonsSnapshot.empty) {
+      // Delete all lessons with this categoryId
+      const lessonDeletionPromises = lessonsSnapshot.docs.map(lessonDoc => {
+        return deleteDoc(doc(db, 'lessons', lessonDoc.id));
+      });
+      
+      // Wait for all lesson deletions to complete
+      await Promise.all(lessonDeletionPromises);
+      console.log(`Deleted ${lessonsSnapshot.docs.length} lessons for category ${categoryId}`);
+    } else {
+      console.log(`No lessons found for category ${categoryId}`);
+    }
+    
+    // Then delete the category itself
+    const categoryRef = doc(db, 'categories', categoryId);
+    await deleteDoc(categoryRef);
+    console.log(`Deleted category ${categoryId}`);
+    
     return { status: 'success' };
   } catch (error) {
-    console.error('Error deleting category:', error);
+    console.error('Error deleting category and its lessons:', error);
     return { status: 'error' };
   }
 };
 
 /**
- * Fetches a single category by ID
- * @param categoryId The ID of the category to fetch
- * @returns The category object or null if not found
+ * Fetches all categories for a specific section
+ * @param sectionId The section ID to filter categories by
+ * @returns Array of Category objects
  */
-// export const fetchCategoryById = async (categoryId: string): Promise<Category | null> => {
-//   try {
-//     const categoryDoc = await firestore().collection('categories').doc(categoryId).get();
+export const fetchCategoriesBySectionId = async (sectionId: string): Promise<Category[]> => {
+  try {
+    const db = getFirestore();
+    const categoriesRef = collection(db, 'categories');
+    const q = query(categoriesRef, where('sectionId', '==', sectionId));
+    const snapshot = await getDocs(q);
     
-//     if (categoryDoc.exists()) {
-//       return {
-//         id: categoryDoc.id,
-//         ...categoryDoc.data() as Omit<Category, 'id'>
-//       };
-//     }
-    
-//     return null;
-//   } catch (error) {
-//     console.error('Error fetching category by ID:', error);
-//     return null;
-//   }
-// };
+    return snapshot.docs.map(docSnap => {
+      return {
+        id: docSnap.id,
+        ...docSnap.data()
+      } as Category
+    });
+  } catch (error) {
+    console.error('Error fetching categories by section ID:', error);
+    return [];
+  }
+};
