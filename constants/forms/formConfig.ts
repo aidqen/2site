@@ -108,9 +108,9 @@ export const getFormConfig = (type: FormType): FormField[] => {
           type: 'text' as const,
         },
         {
-          key: 'text',
+          key: 'description',
           label: 'טקסט',
-          type: 'dropdown' as const,
+          type: 'textarea' as const,
         }
       ];
     default:

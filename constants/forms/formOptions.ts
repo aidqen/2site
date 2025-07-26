@@ -49,7 +49,13 @@ export const getInitialFormState = ({ type }: { type: string }) => {
         description: '',
         index: ''
       }
-
+    case 'promotional':
+      return {
+        name: '',
+        description: '',
+        imgUrl: '',
+        link: '',
+      }
     default:
       break;
   }

@@ -5,8 +5,8 @@ import { fetchLessonById, getStorageDownloadUrl } from "@/services/lesson.servic
 import { addLessonToFavorites, removeLessonFromFavorites } from "@/services/user.service";
 import { FavoriteLesson, Lesson } from "@/types";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { useRemoteMediaClient } from "react-native-google-cast";
 import Video, { VideoRef } from "react-native-video";
@@ -22,6 +22,7 @@ export default function LessonPage() {
     const { user, refreshUserData, updateFavoriteLessons } = useUser()
     const category = useSelector((state: any) => state.selectedCategory)
     const categoryLessons = useSelector((state: any) => state.categoryLessons)
+    console.log("🚀 ~ file: [lessonId].tsx:25 ~ categoryLessons:", categoryLessons)
     const [lesson, setLesson] = useState<Lesson | null>(null)
     const [nextBtnEnabled, setNextBtnEnabled] = useState(false)
     const [mediaState, setMediaState] = useState({
@@ -44,10 +45,16 @@ export default function LessonPage() {
     }, [categoryLessons, index])
 
 
-    useEffect(() => {
-        fetchLesson();
-        isLessonFavorite()
-    }, [category, lessonId]);
+    // Use useFocusEffect to refresh data when navigating back to this screen
+    useFocusEffect(
+        useCallback(() => {
+            fetchLesson();
+            isLessonFavorite();
+            
+            // No cleanup function needed
+            return () => {};
+        }, [category, lessonId, categoryLessons])
+    );
 
 
 

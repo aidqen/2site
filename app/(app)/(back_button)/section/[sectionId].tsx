@@ -115,7 +115,6 @@ export default function SectionDetails() {
     }
   }
   
-  // Function to handle refresh when user navigates back to this screen
   useFocusEffect(
     useCallback(() => {
       if (sectionId) {

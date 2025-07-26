@@ -2,14 +2,14 @@ import { MainButton } from '@/components/ui/MainButton';
 import { getFormConfig } from '@/constants/forms/formConfig';
 import { getFormTitle, getInitialFormState } from '@/constants/forms/formOptions';
 import { colors } from '@/constants/styles';
-import { createCategory, updateCategory } from '@/services/category.service';
-import { createLesson, updateLesson } from '@/services/lesson.service';
-import { SET_CATEGORY_LESSONS, SET_SELECTED_CATEGORY } from '@/store/reducer';
-import { Category, Lesson } from '@/types';
+import { handleCategoryCreate, handleCategoryUpdate, handleLessonCreate, handleLessonUpdate } from '@/services/form.service';
+import { addPromotionalItem, updatePromotionalItem } from '@/services/promotional.service';
+import { Category, PromotionalItem } from '@/types';
 import { FormData, FormType } from '@/types/forms';
+
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView, Text, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { FormFieldRenderer } from './form/FormFieldRenderer';
@@ -31,10 +31,12 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   const router = useRouter();
   const dispatch = useDispatch();
   const categoryLessons = useSelector((state: any) => state.categoryLessons);
-  
-  const [formData, setFormData] = useState<Category | FormData>(content || getInitialFormState({ type }));
+
+  // Use FormData as the base type since it has all the fields we need
+  const [formData, setFormData] = useState<FormData>(content || getInitialFormState({ type }));
+  console.log("🚀 ~ file: DynamicForm.tsx:37 ~ formData:", formData)
   const [selectedSection, setSelectedSection] = useState<'long' | 'short'>('short');
-  
+
   const formFields = getFormConfig(type);
   const formTitle = getFormTitle(type, isEdit);
 
@@ -52,108 +54,47 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
     }));
   };
 
-  const handleSubmit = () => {
+  
+  // Main submit handler with direct handling of all form types
+  const handleSubmit = async () => {
     switch (type) {
-      case 'category':
+      case 'category': {
+        let result;
+        
         if (isEdit) {
-          updateCategory(formData as Category)
-          dispatch({ type: SET_SELECTED_CATEGORY, category: formData as Category })
+          result = await handleCategoryUpdate(formData as Category, dispatch);
         } else {
-          createCategory(formData as Category)
-        }
-        router.push({ pathname: '/section/[sectionId]', params: { sectionId: formData.sectionId } })
-        break;
-      case 'lesson':
-        // Show loading indicator or disable button here if needed
-        if (isEdit) {
-          // Type assertion to handle FormData | Category union
-          const typedFormData = formData as FormData;
-          
-          // Extract only the fields needed for lesson update
-          const lessonData: Partial<Lesson> = {
-            id: typedFormData.id,
-            name: typedFormData.name || '',
-            videoUrl: typedFormData.videoUrl || '',
-            description: typedFormData.description,
-            imgUrl: typedFormData.imgUrl,
-            categoryId: typedFormData.categoryId
-          };
-          
-          updateLesson(lessonData)
-            .then(result => {
-              if (result.status === 'success') {
-                // Update Redux state if needed
-                if (categoryLessons) {
-                  const updatedLessons = categoryLessons.map((lesson: Lesson) => 
-                    lesson.id === lessonData.id ? { ...lesson, ...lessonData } : lesson
-                  );
-                  dispatch({ type: SET_CATEGORY_LESSONS, lessons: updatedLessons });
-                }
-                
-                // Navigate back to the category details page
-                if (typedFormData.categoryId) {
-                  router.push(`/category/details/${typedFormData.categoryId}`);
-                } else {
-                  router.back();
-                }
-              } else {
-                Alert.alert('שגיאה', 'אירעה שגיאה בעדכון השיעור');
-              }
-            })
-            .catch(error => {
-              console.error('Error updating lesson:', error);
-              Alert.alert('שגיאה', 'אירעה שגיאה בעדכון השיעור');
-            });
-        } else {
-          // Type assertion to handle FormData | Category union
-          const typedFormData = formData as FormData;
-          
-          // Extract only the fields needed for lesson creation
-          const lessonData: Partial<Lesson> = {
-            name: typedFormData.name || '',
-            videoUrl: typedFormData.videoUrl || '',
-            description: typedFormData.description,
-            imgUrl: typedFormData.imgUrl,
-            categoryId: typedFormData.categoryId
-          };
-          
-          createLesson(lessonData)
-            .then(result => {
-              if (result.status === 'success' && result.lessonId) {
-                // If we have category lessons in Redux, update them
-                if (categoryLessons && typedFormData.categoryId) {
-                  const newLesson: Lesson = {
-                    id: result.lessonId,
-                    name: lessonData.name || '',
-                    videoUrl: lessonData.videoUrl || '',
-                    description: lessonData.description || '',
-                    imgUrl: lessonData.imgUrl || '',
-                    index: categoryLessons.length + 1
-                  };
-                  
-                  dispatch({ 
-                    type: SET_CATEGORY_LESSONS, 
-                    lessons: [...categoryLessons, newLesson] 
-                  });
-                }
-                
-                // Navigate back to the category details page
-                if (typedFormData.categoryId) {
-                  router.push(`/category/details/${typedFormData.categoryId}`);
-                } else {
-                  router.back();
-                }
-              } else {
-                Alert.alert('שגיאה', 'אירעה שגיאה ביצירת השיעור');
-              }
-            })
-            .catch(error => {
-              console.error('Error creating lesson:', error);
-              Alert.alert('שגיאה', 'אירעה שגיאה ביצירת השיעור');
-            });
+          result = await handleCategoryCreate(formData as Category);
         }
         break;
-
+      }
+        
+      case 'lesson': {
+        let result;
+        
+        if (isEdit) {
+          result = await handleLessonUpdate(formData as FormData, dispatch, categoryLessons);
+        } else {
+          result = await handleLessonCreate(formData as FormData, dispatch, categoryLessons);
+        }
+        break;
+      }
+      case 'promotional': {
+        let result;
+        if (isEdit) {
+          if (formData.id) {
+            result = await updatePromotionalItem(formData.id, {
+              name: formData.name || '',
+              description: formData.description || '',
+              imgUrl: formData.imgUrl || '',
+              link: formData.link || ''
+            })
+          }
+        } else {
+          result = await addPromotionalItem(formData as Omit<PromotionalItem, 'id'>)
+        }
+        break;
+      }
       default:
         break;
     }

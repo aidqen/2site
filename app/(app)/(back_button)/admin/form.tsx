@@ -1,6 +1,6 @@
 import { DynamicForm } from '@/components/admin/DynamicForm';
 import { fetchContentById } from '@/services/lesson.service';
-import { Category, Lesson } from '@/types';
+import { Category, Lesson, PromotionalItem } from '@/types';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
@@ -13,10 +13,8 @@ export default function AdminFormPage() {
     id: string;
     categoryId?: string;
   }>();
-  console.log("🚀 ~ AdminFormPage ~ isEdit:",typeof isEdit)
-  const [content, setContent] = useState<null | Category | Lesson>(null)
+  const [content, setContent] = useState<null | Category | Lesson | PromotionalItem>(null)
   const category = useSelector((state: any) => state.selectedCategory)
-  console.log('category...', category);
 
 
   useEffect(() => {
@@ -27,9 +25,7 @@ export default function AdminFormPage() {
         const result = await fetchContentById(type, id);
         if (result) {
           if (type === 'lesson') {
-            console.log('hi');
             const contentWithCategory = { ...result, category: { name: category?.name, id: category?.id } };
-            console.log('Content with category:', contentWithCategory);
             setContent(contentWithCategory);
           } else {
             setContent(result);
@@ -52,8 +48,6 @@ export default function AdminFormPage() {
   const isEditMode = isEdit === 'true';
 
   const handleSubmit = (formData: any) => {
-    // Here you would handle the form submission
-    // For example, sending data to an API or updating state
     console.log('Form submitted:', formData);
   };
 

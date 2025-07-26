@@ -20,7 +20,10 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.dafnacaspi.yogapilates",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -51,7 +54,14 @@
         }
       ],
       "react-native-google-cast",
-      ["expo-build-properties", { "ios": { "deploymentTarget": "15.1" } }],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
       [
         "expo-image-picker",
         {
@@ -61,6 +71,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "14f41823-0caa-4e39-9305-6e1cbb02ac2a"
+      }
     }
   }
 }

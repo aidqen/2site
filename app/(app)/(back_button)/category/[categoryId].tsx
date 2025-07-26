@@ -21,7 +21,6 @@ export default function CategoryDetails() {
 
   const category = useSelector((state: any) => state.selectedCategory)
   const lessons = useSelector((state: any) => state.categoryLessons)
-  console.log("🚀 ~ CategoryDetails ~ lessons:", lessons)
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [categoryImageUrl, setCategoryImageUrl] = useState<string | null>(null);

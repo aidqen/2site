@@ -4,6 +4,7 @@ import { Category, Lesson } from '@/types';
 import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, orderBy, query, where } from '@react-native-firebase/firestore';
 import { getDownloadURL, getStorage, ref } from '@react-native-firebase/storage';
 import { fetchCategoryById } from './category.service';
+import { PromotionalItem, fetchPromotionalItemById } from './promotional.service';
 
 export const getStorageDownloadUrl = async (path?: string): Promise<string> => {
   if (!path) {
@@ -126,7 +127,7 @@ export const fetchLessonsByCategory = async (categoryId: string): Promise<Lesson
 export const fetchContentById = async (
   type: 'category' | 'lesson' | 'promotional',
   id: string,
-): Promise<Category | Lesson | null> => {
+): Promise<Category | Lesson | PromotionalItem | null> => {
   try {
     if (!id) return null;
     
@@ -138,8 +139,7 @@ export const fetchContentById = async (
         return await fetchLessonById(id);
       
       case 'promotional':
-        console.log('Promotional content fetching not implemented yet');
-        return null;
+        return await fetchPromotionalItemById(id);
       
       default:
         console.error(`Unknown content type: ${type}`);
@@ -226,6 +226,7 @@ export const createLesson = async (lessonData: Partial<Lesson>): Promise<{ statu
 export const updateLesson = async (lessonData: Partial<Lesson>): Promise<{ status: string }> => {
   try {
     const { id, name, imgUrl, description, videoUrl, categoryId } = lessonData;
+    console.log("🚀 ~ file: lesson.service.ts:229 ~ categoryId:", categoryId)
     
     if (!id || !name || !videoUrl) {
       console.error('Missing required fields for lesson update');
@@ -239,11 +240,12 @@ export const updateLesson = async (lessonData: Partial<Lesson>): Promise<{ statu
     const updateData: Record<string, any> = {
       name,
       videoUrl,
-      updatedAt: Date.now() // Use regular JS timestamp
+      imgUrl,
+      description,
     };
     
-    if (imgUrl !== undefined) updateData.imgUrl = imgUrl;
-    if (description !== undefined) updateData.description = description;
+    // if (imgUrl !== undefined) updateData.imgUrl = imgUrl;
+    // if (description !== undefined) updateData.description = description;
     if (categoryId !== undefined) updateData.categoryId = categoryId;
     
     await lessonRef.update(updateData);

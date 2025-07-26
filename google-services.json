@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "940099451051-e49gslvde15mkn64sq808laihq00tcv7.apps.googleusercontent.com",
+          "client_id": "940099451051-c720355h4ches6637drlfmarosiareml.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dafnacaspi.yogapilates",
-            "certificate_hash": "2094826a4ab21977a4f2c573d8f90c034917f047"
+            "certificate_hash": "87d55c39da1a8889bb2cce4ea356eb861bd8d74a"
           }
         },
         {

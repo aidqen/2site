@@ -14,10 +14,6 @@ interface PageContainerProps {
   plusBtnAction?: () => void;
 }
 
-/**
- * A reusable page container component that provides consistent layout structure
- * for different pages in the application.
- */
 export function PageContainer({
   children,
   title,
@@ -38,12 +34,12 @@ export function PageContainer({
   return (
     <View
       style={{ flex: 1, paddingHorizontal: 24, paddingBottom, gap }}    // px-6
-      className="flex-1 items-center justify-start pb-10"
+      className="flex-1 items-center justify-start pb-10 overflow-x-visible"
     >
       {(title || description) && (
         <View
           style={{
-            marginTop: 40,                          // mt-10
+            marginTop: 40,
             alignItems: 'center',
             marginBottom: gap,
           }}

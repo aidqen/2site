@@ -4,7 +4,6 @@ import { FormData, FormField, FormType } from '@/types/forms';
 import React from 'react';
 import { TextInput, View } from 'react-native';
 import { DropdownFieldRenderer } from './DropdownFieldRenderer';
-import { FormDropdown } from './FormDropdown';
 import { ImageUploader } from './ImageUploader';
 import { MainFileUploader } from './MainFileUploader';
 
@@ -72,12 +71,15 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
         </View>
       );
     case 'image':
+      console.log('field.key', field.key);
+      
       return (
         <ImageUploader
           key={field.key}
           onPress={onAddImage}
           image={image}
           label={field.label}
+          onFileUploaded={(path) => onInputChange(field.key, path)}
         />
       );
     case 'video':

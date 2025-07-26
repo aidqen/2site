@@ -88,6 +88,9 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -159,6 +162,7 @@ dependencies {
 // @generated end react-native-google-cast-dependencies
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+    implementation 'com.google.firebase:firebase-auth:24.0.0'  // or whatever the latest is
     implementation platform('com.google.firebase:firebase-bom:33.16.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation "com.google.android.gms:play-services-cast-framework:${googlePlayServicesCastFrameworkVersion}"

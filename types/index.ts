@@ -34,3 +34,11 @@ export interface FavoriteLesson {
   imgUrl?: string;
   addedAt: Date | FirebaseFirestoreTypes.FieldValue | number | null;
 }
+
+export interface PromotionalItem {
+  id: string;
+  name: string;
+  description: string;
+  imgUrl: string;
+  link: string;
+}

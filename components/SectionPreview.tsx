@@ -18,7 +18,6 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false, i
     const [uri, setUri] = useState<string>('')
     const [loading, setLoading] = useState<boolean>(true)
     const overlayOpacity = useRef(new Animated.Value(0)).current;
-    // console.log("🔍 ~ SectionPreview ~ components/SectionPreview.tsx:8 ~ section:", section)
 
     useEffect(() => {
         if (imgUrl) {
@@ -28,7 +27,6 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false, i
                     setLoading(false)
                 })
                 .catch(error => {
-                    console.error("Error getting download URL:", error)
                     setLoading(false)
                 })
         } else {
@@ -36,7 +34,6 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false, i
         }
     }, [imgUrl])
 
-    // Animate overlay opacity when isEdit changes
     useEffect(() => {
         Animated.timing(overlayOpacity, {
             toValue: isEdit ? 0.6 : 0,
@@ -57,12 +54,10 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false, i
         }
     };
 
-    // Function moved to firebase.service.ts
-
     return (
         <TouchableOpacity
             key={id}
-            className="w-full mb-4 overflow-hidden rounded-2xl bg-white"
+            className="w-full mb-4 overflow-hidden rounded-2xl bg-white overflow-x-visible"
             style={{
                 shadowColor: '#000',
                 shadowOffset: { width: 3, height: 3 },
@@ -96,7 +91,7 @@ export function SectionPreview({ id, imgUrl, title, onPress, isLesson = false, i
                     )}
                     {isLesson && <TouchableOpacity
                         className="absolute transform -translate-x-1/2 -translate-y-1/2 left-1/2 rounded-full w-[46.5px] h-[46.5px] items-center justify-center"
-                        style={{ 
+                        style={{
                             backgroundColor: colors.primaryDarker,
                             top: '50%',
                             marginTop: -48/2
