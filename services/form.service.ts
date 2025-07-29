@@ -40,7 +40,7 @@ export const handleLessonUpdate = async (
   dispatch: Dispatch,
   categoryLessons: Lesson[]
 ): Promise<{ status: string }> => {
-  const lessonData = extractLessonData(formData);
+  const lessonData = extractLessonData(formData, 'update');
   
   const result = await updateLesson(lessonData);
   if (result.status === 'success') {
@@ -60,7 +60,8 @@ export const handleLessonCreate = async (
   dispatch: Dispatch,
   categoryLessons: Lesson[]
 ): Promise<{ status: string }> => {
-  const lessonData = extractLessonData(formData);
+  const lessonData = extractLessonData({...formData, index: categoryLessons.length + 1}, 'create');
+  console.log("🚀 ~ lessonData:", lessonData)
   
   try {
     const result = await createLesson(lessonData);
@@ -69,8 +70,7 @@ export const handleLessonCreate = async (
       if (categoryLessons && lessonData.categoryId) {
         const newLesson = createNewLessonObject(
           result.lessonId,
-          lessonData,
-          categoryLessons.length + 1
+          lessonData
         );
         
         dispatch({

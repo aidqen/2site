@@ -18,6 +18,7 @@ export default function CategoryDetails() {
     const dispatch = useDispatch();
     const category = useSelector((state: any) => state.selectedCategory)
     const lessons = useSelector((state:any) => state.categoryLessons)
+    console.log("🚀 ~ CategoryDetails ~ lessons:", lessons)
     const [isEdit, setIsEdit] = useState(false)
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);

@@ -41,7 +41,7 @@ interface FormDropdownProps {
 export const FormDropdown: React.FC<FormDropdownProps> = ({
   type,
   dropDownDirection,
-   triggerLabel,
+  triggerLabel,
   options,
   value,
   onValueChange,
@@ -81,7 +81,7 @@ export const FormDropdown: React.FC<FormDropdownProps> = ({
 
   // Extract the value ID for dropdown selection
   const singleValue = typeof value === 'object' ? value?.id : value;
-  
+
   // Create a custom label for the selected value when it's a category object
   const getValueLabel = (): string | undefined => {
     if (value && typeof value === 'object' && 'name' in value) {

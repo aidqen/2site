@@ -62,7 +62,7 @@ export const getFormConfig = (type: FormType): FormField[] => {
           type: 'dropdown' as const,
         },
         {
-          key: 'category',
+          key: 'categoryId',
           label: 'שיוך לקטגוריה',
           type: 'dropdown' as const,
         }

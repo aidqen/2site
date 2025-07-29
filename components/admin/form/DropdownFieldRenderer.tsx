@@ -30,7 +30,7 @@ export const DropdownFieldRenderer: React.FC<DropdownFieldRendererProps> = ({
             triggerLabel={field.label}
             value={selectedSection}
             onValueChange={(value) => {
-              if (value === 'long' || value === 'short') {
+              if (value === "long" || value === "short") {
                 setSelectedSection(value);
               }
             }}
@@ -41,7 +41,8 @@ export const DropdownFieldRenderer: React.FC<DropdownFieldRendererProps> = ({
         </View>
       );
 
-    case 'category':
+    case 'categoryId':
+      console.log('field.key', field.key);
       return (
         <View key={field.key} style={{ marginBottom: 0 }}>
           <FormDropdown
@@ -55,7 +56,7 @@ export const DropdownFieldRenderer: React.FC<DropdownFieldRendererProps> = ({
           />
         </View>
       );
-      
+
     case 'sectionId':
       return (
         <View key={field.key} style={{ marginBottom: 0 }}>

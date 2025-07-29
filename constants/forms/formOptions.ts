@@ -38,8 +38,7 @@ export const getInitialFormState = ({ type }: { type: string }) => {
         imgUrl: '',
         videoUrl: '',
         lessonType: '',
-        category: '',
-        text: ''
+        categoryId: '',
       }
     case 'category':
       return {

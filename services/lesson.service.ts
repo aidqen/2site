@@ -10,7 +10,7 @@ export const getStorageDownloadUrl = async (path?: string): Promise<string> => {
   if (!path) {
     return '';
   }
-  
+
   try {
     const storage = getStorage();
     const fileRef = ref(storage, path);
@@ -27,10 +27,10 @@ export const fetchLessonByIndex = async (
   lessonIndex: string | number
 ): Promise<Lesson | null> => {
   try {
-    const numericIndex = typeof lessonIndex === 'string' 
-      ? parseInt(lessonIndex) 
+    const numericIndex = typeof lessonIndex === 'string'
+      ? parseInt(lessonIndex)
       : lessonIndex;
-    
+
     const db = getFirestore();
     const lessonsRef = collection(db, 'lessons');
     const q = query(
@@ -40,7 +40,7 @@ export const fetchLessonByIndex = async (
       limit(1)
     );
     const querySnapshot = await getDocs(q);
-    
+
     const docSnap = querySnapshot.docs[0];
     if (!docSnap) {
       console.error("No lesson found with the specified index");
@@ -69,7 +69,7 @@ export const fetchLessonById = async (lessonId: string): Promise<Lesson | null> 
     const db = getFirestore();
     const lessonRef = doc(db, 'lessons', lessonId);
     const docSnap = await getDoc(lessonRef);
-    
+
     if (!docSnap.exists()) {
       console.log('No lesson found with the specified ID');
       return null;
@@ -130,17 +130,17 @@ export const fetchContentById = async (
 ): Promise<Category | Lesson | PromotionalItem | null> => {
   try {
     if (!id) return null;
-    
+
     switch (type) {
       case 'category':
         return await fetchCategoryById(id);
-      
+
       case 'lesson':
         return await fetchLessonById(id);
-      
+
       case 'promotional':
         return await fetchPromotionalItemById(id);
-      
+
       default:
         console.error(`Unknown content type: ${type}`);
         return null;
@@ -157,7 +157,7 @@ export const deleteLesson = async (lessonId: string): Promise<{ status: string }
     const lessonRef = doc(db, 'lessons', lessonId);
     await deleteDoc(lessonRef);
     console.log(`Deleted lesson ${lessonId}`);
-    
+
     return { status: 'success' };
   } catch (error) {
     console.error('Error deleting lesson:', error);
@@ -173,32 +173,15 @@ export const deleteLesson = async (lessonId: string): Promise<{ status: string }
 export const createLesson = async (lessonData: Partial<Lesson>): Promise<{ status: string; lessonId?: string }> => {
   try {
     // Extract only the fields we need for the lesson
-    const { name, imgUrl, description, videoUrl, categoryId } = lessonData;
-    
+    const { name, imgUrl, description, videoUrl, categoryId, index } = lessonData;
+
     if (!name || !videoUrl || !categoryId) {
       console.error('Missing required fields for lesson creation');
       return { status: 'error' };
     }
-    
-    // Get the next available index for this category
+
     const db = getFirestore();
-    const lessonsRef = collection(db, 'lessons');
-    const q = query(
-      lessonsRef,
-      where('categoryId', '==', categoryId),
-      orderBy('index', 'desc'),
-      limit(1)
-    );
-    
-    const querySnapshot = await getDocs(q);
-    let nextIndex = 1; // Default to 1 if no lessons exist
-    
-    if (!querySnapshot.empty) {
-      const lastLesson = querySnapshot.docs[0].data();
-      nextIndex = (lastLesson.index || 0) + 1;
-    }
-    
-    // Create the new lesson document
+
     const newLessonRef = doc(collection(db, 'lessons'));
     await newLessonRef.set({
       name,
@@ -206,10 +189,9 @@ export const createLesson = async (lessonData: Partial<Lesson>): Promise<{ statu
       description: description || '',
       videoUrl,
       categoryId,
-      index: nextIndex,
-      createdAt: Date.now() // Use regular JS timestamp
+      index
     });
-    
+
     console.log(`Created lesson ${newLessonRef.id}`);
     return { status: 'success', lessonId: newLessonRef.id };
   } catch (error) {
@@ -227,15 +209,15 @@ export const updateLesson = async (lessonData: Partial<Lesson>): Promise<{ statu
   try {
     const { id, name, imgUrl, description, videoUrl, categoryId } = lessonData;
     console.log("🚀 ~ file: lesson.service.ts:229 ~ categoryId:", categoryId)
-    
+
     if (!id || !name || !videoUrl) {
       console.error('Missing required fields for lesson update');
       return { status: 'error' };
     }
-    
+
     const db = getFirestore();
     const lessonRef = doc(db, 'lessons', id);
-    
+
     // Update only the fields that are provided
     const updateData: Record<string, any> = {
       name,
@@ -243,13 +225,13 @@ export const updateLesson = async (lessonData: Partial<Lesson>): Promise<{ statu
       imgUrl,
       description,
     };
-    
+
     // if (imgUrl !== undefined) updateData.imgUrl = imgUrl;
     // if (description !== undefined) updateData.description = description;
     if (categoryId !== undefined) updateData.categoryId = categoryId;
-    
+
     await lessonRef.update(updateData);
-    
+
     console.log(`Updated lesson ${id}`);
     return { status: 'success' };
   } catch (error) {

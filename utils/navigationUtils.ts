@@ -10,6 +10,7 @@ export const navigateToSection = (sectionId: string) => {
 };
 
 export const navigateToCategoryDetails = (categoryId: string) => {
+  console.log("🚀 ~ navigateToCategoryDetails ~ categoryId:", categoryId)
   router.push(`/category/details/${categoryId}`);
 };
 

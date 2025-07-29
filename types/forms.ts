@@ -15,7 +15,8 @@ export interface FormData {
   name?: string;
   categoryName?: string;
   description?: string;
-  link?: string;
+  link?: string; 
+  index?: number;
   lessonType?: string;
   category?: string;
   imgUrl?: string;

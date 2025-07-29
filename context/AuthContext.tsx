@@ -53,6 +53,7 @@ export function useAuth() {
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  console.log("🚀 ~ AuthProvider ~ user:", user)
   const [isLoading, setIsLoading] = useState(true);
   const auth = getAuth();
 
@@ -92,8 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (userDoc.exists()) {
         const userData = userDoc.data();
-        const favoriteLessons = favoriteLessonsDoc.docs.map(doc => doc.data())
         console.log("🚀 ~ fetchUserData ~ userData:", userData)
+        const favoriteLessons = favoriteLessonsDoc.docs.map(doc => doc.data())
         const simplifiedUser = getUserSummary(firebaseUser as User);
         
         const enhancedUser = {
@@ -103,6 +104,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           isAdmin: userData?.isAdmin || false,
         } as unknown as User; 
         
+        console.log("🚀 ~ fetchUserData ~ enhancedUser:", enhancedUser)
         return enhancedUser;
       }
       

@@ -27,12 +27,10 @@ export const DynamicForm: React.FC<DynamicFormProps> = ({
   onSubmit,
   content
 }) => {
-  // Move all hooks to the top level of the component
+  console.log("🚀 ~ content:", content)
   const router = useRouter();
   const dispatch = useDispatch();
   const categoryLessons = useSelector((state: any) => state.categoryLessons);
-
-  // Use FormData as the base type since it has all the fields we need
   const [formData, setFormData] = useState<FormData>(content || getInitialFormState({ type }));
   console.log("🚀 ~ file: DynamicForm.tsx:37 ~ formData:", formData)
   const [selectedSection, setSelectedSection] = useState<'long' | 'short'>('short');
