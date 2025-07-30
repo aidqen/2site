@@ -8,18 +8,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
-import { useRemoteMediaClient } from "react-native-google-cast";
+import CastContext, { CastButton, CastState, useCastSession, useCastState, useRemoteMediaClient } from "react-native-google-cast";
 import Video, { VideoRef } from "react-native-video";
 import { useSelector } from "react-redux";
 
 export default function LessonPage() {
     const router = useRouter()
     const client = useRemoteMediaClient();
+    const session = useCastSession()
+    const castState = useCastState()
+    console.log("🚀 ~ LessonPage ~ client:", client)
 
     const { lessonId } = useLocalSearchParams();
     const videoRef = useRef<VideoRef>(null)
 
-    const { user, refreshUserData, updateFavoriteLessons } = useUser()
+    const { user, refreshUserData } = useUser()
     const category = useSelector((state: any) => state.selectedCategory)
     const categoryLessons = useSelector((state: any) => state.categoryLessons)
     console.log("🚀 ~ file: [lessonId].tsx:25 ~ categoryLessons:", categoryLessons)
@@ -31,10 +34,29 @@ export default function LessonPage() {
         isPaused: true,
         initialPlay: false,
         loading: true
-      });
+    });
     const [index, setIndex] = useState(0)
     const [isFavorite, setIsFavorite] = useState(false)
     const [loading, setLoading] = useState(true)
+    const castButtonRef = useRef(null)
+
+    useEffect(() => {
+        play()
+    }, [client])
+
+    const play = async () => {
+        if (castState === CastState.CONNECTED && client && lesson && lesson.videoUrl) {
+          await client.loadMedia({
+            mediaInfo: {
+              contentUrl: lesson.videoUrl,
+              contentType: 'video/mp4',
+            //   metadata: { title: 'My Video' },
+            },
+            autoplay: true,
+          })
+        }
+      }
+    
 
     useEffect(() => {
         if (Number(index) < Number(categoryLessons.length)) {
@@ -50,9 +72,9 @@ export default function LessonPage() {
         useCallback(() => {
             fetchLesson();
             isLessonFavorite();
-            
+
             // No cleanup function needed
-            return () => {};
+            return () => { };
         }, [category, lessonId, categoryLessons])
     );
 
@@ -82,38 +104,9 @@ export default function LessonPage() {
         setMediaState(prev => ({ ...prev, [key]: value }));
     }
     const castToTV = async () => {
-        console.log('Cast client:', client);
-        console.log('Video URI:', mediaState.videoUri);
+        const shown = await CastContext.showCastDialog()
+        console.log("🚀 ~ castToTV ~ shown:", shown)
 
-        if (!client) {
-            console.error('Google Cast client not available');
-            return;
-        }
-
-        if (!mediaState.videoUri) {
-            console.error('Video URI not available');
-            return;
-        }
-
-        try {
-            await client.loadMedia({
-                mediaInfo: {
-                    contentUrl: mediaState.videoUri,
-                    contentType: 'video/mp4',
-                    metadata: {
-                        title: lesson?.name || 'Yoga Video',
-                        subtitle: lesson?.description,
-                        type: 'movie',
-                        images: mediaState.imageUri ? [{
-                            url: mediaState.imageUri
-                        }] : undefined
-                    },
-                },
-            });
-            console.log('Media loaded successfully to Cast device');
-        } catch (error) {
-            console.error('Error casting to TV:', error);
-        }
     };
 
     function isLessonFavorite() {
@@ -176,7 +169,7 @@ export default function LessonPage() {
 
     async function onAddToFavoriteLessons() {
         if (lesson && user?.uid) {
-            const {lesson: favoriteLesson, status} = await addLessonToFavorites(user?.uid, lesson)
+            const { lesson: favoriteLesson, status } = await addLessonToFavorites(user?.uid, lesson)
             if (status === 'error') {
                 return Alert.alert('אירעה תקלה, נסה שוב מאוחר יותר')
             }
@@ -223,7 +216,7 @@ export default function LessonPage() {
                         style={{ width: '100%', height: 246 }} // 56 tailwind units = 224px
                         resizeMode="cover"
                         paused={mediaState.isPaused}
-                        onLoad={() => console.log('Video loaded')}
+                        // onLoad={() => console.log('Video loaded')}
                         onError={(error) => console.error('Video error:', error)}
                         repeat={false}
                         controls={!mediaState.initialPlay ? false : true}
@@ -253,6 +246,7 @@ export default function LessonPage() {
             </View>
 
             <View className="mt-10 mb-[25%] px-5 gap-2">
+                    <CastButton />
                 <TouchableOpacity
                     className="rounded-md py-3 mb-3"
                     style={{ backgroundColor: colors.primaryDarker }}
