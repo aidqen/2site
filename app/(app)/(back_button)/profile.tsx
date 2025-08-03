@@ -35,10 +35,6 @@ export default function ProfilePage() {
 
     const adminPromotionalButtons: ButtonItem[] = [
         {
-            title: "עריכת תוכן שיווקי",
-            onPress: () => router.push('/admin/form?type=promotional&isEdit=true')
-        },
-        {
             title: "תמיכה",
             onPress: () => {}
         }

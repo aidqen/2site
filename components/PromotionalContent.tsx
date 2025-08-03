@@ -46,7 +46,7 @@ export function PromotionalContent({
   }
 
   return (
-    <TouchableOpacity onPress={() => router.push(`/admin/form?type=promotional&id=${item.id}&isEdit=true`)} className="rounded-2xl shadow-md w-full bg-white overflow-hidden mb-6" >
+    <TouchableOpacity onPress={() => router.push(`/admin/form?type=promotional&id=${item.id}&isEdit=true`)} className="rounded-2xl shadow-md w-full bg-white overflow-hidden mb-36" >
       <View className="relative">
         <Image
           source={{ uri: imgUrl }}

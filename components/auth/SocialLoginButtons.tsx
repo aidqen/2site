@@ -22,7 +22,6 @@ export function SocialLoginButtons({
   const socialButtons: SocialButtonType[] = [
     { name: 'facebook', color: '#3b5998', onPress: onFacebookPress },
     { name: 'google', color: '#DB4437', onPress: onGooglePress },
-    { name: 'apple', color: '#000000', onPress: onApplePress }
   ];
 
   return (

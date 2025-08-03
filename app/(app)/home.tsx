@@ -96,7 +96,8 @@ export default function Home() {
          <PageContainer
             title={'שלום ' + getUsername()}
             description="הגיל לא עוצר את מי שממשיך לזוז"
-            plusBtnAction={isEdit ? () => router.push('/admin/form?isEdit=false&type=promotional') : undefined}
+            plusBtnAction={() => router.push('/admin/form?isEdit=false&type=promotional')}
+            
          >
             <View className="w-full">
                <FlatList

@@ -53,7 +53,12 @@
           }
         }
       ],
-      ["react-native-google-cast", {"receiverAppId": "4A61A83D"}],
+      [
+        "react-native-google-cast",
+        {
+          "receiverAppId": "4A61A83D"
+        }
+      ],
       [
         "expo-build-properties",
         {
@@ -66,6 +71,15 @@
         "expo-image-picker",
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "1407444894038978",
+          "displayName": "dafna caspi",
+          "scheme": "fb1407444894038978",
+          "clientToken":"ac623a0b70675d1578efcfc91fcef4e8"
         }
       ]
     ],

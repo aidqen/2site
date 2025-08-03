@@ -17,6 +17,7 @@ export const PlusButton: React.FC<PlusButtonProps> = ({ onPress }) => {
       <TouchableOpacity
         className="w-[41px] h-[41px] rounded-lg flex-row items-center justify-center"
         style={{ borderColor: colors.primaryDarker, backgroundColor: colors.primaryDarker }}
+        onPress={onPress ? onPress : () => {}}
       >
         <Ionicons name="add" size={35} color={'white'} />
       </TouchableOpacity>

@@ -1,13 +1,7 @@
 apply plugin: "com.android.application"
-// @generated begin safeExtGet - expo prebuild (DO NOT MODIFY) sync-be4acad6508a6820102c74ab393bd7ab1093e6c0
-def safeExtGet(prop, fallback) {
-  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-}
-// @generated end safeExtGet
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 apply plugin: "com.google.gms.google-services"
-
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
 /**
@@ -88,21 +82,18 @@ def enableProguardInReleaseBuilds = (findProperty('android.enableProguardInRelea
 def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
 
 android {
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
     ndkVersion rootProject.ext.ndkVersion
 
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.dafnacaspi.yogapilates'
+    namespace "com.twosite"
     defaultConfig {
-        applicationId 'com.dafnacaspi.yogapilates'
+        applicationId "com.twosite"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0"
     }
     signingConfigs {
         debug {
@@ -124,10 +115,11 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // חתימה נכונה של גרסת release
-            signingConfig signingConfigs.release
+            // Caution! In production, you need to generate your own keystore file.
+            // see https://reactnative.dev/docs/signed-apk-android.
+            signingConfig signingConfigs.debug
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
-            minifyEnabled false
+            minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             crunchPngs (findProperty('android.enablePngCrunchInReleaseBuilds')?.toBoolean() ?: true)
         }
@@ -163,16 +155,8 @@ android {
 }
 
 dependencies {
-// @generated begin react-native-google-cast-dependencies - expo prebuild (DO NOT MODIFY) sync-3822a3c86222e7aca74039b551612aab7e75365d
-    implementation "com.google.android.gms:play-services-cast-framework:${safeExtGet('castFrameworkVersion', '+')}"
-// @generated end react-native-google-cast-dependencies
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
-    implementation 'com.google.firebase:firebase-auth:24.0.0'  // or whatever the latest is
-    implementation platform('com.google.firebase:firebase-bom:33.16.0')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation "com.google.android.gms:play-services-cast-framework:${googlePlayServicesCastFrameworkVersion}"
-
 
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
@@ -198,7 +182,3 @@ dependencies {
         implementation jscFlavor
     }
 }
-
-apply plugin: 'com.google.firebase.crashlytics'
-apply plugin: 'com.android.application'
-apply plugin: 'com.google.gms.google-services'

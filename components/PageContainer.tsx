@@ -39,7 +39,7 @@ export function PageContainer({
       {(title || description) && (
         <View
           style={{
-            marginTop: 40,
+            marginTop: '7%',
             alignItems: 'center',
             marginBottom: gap,
           }}
@@ -62,7 +62,7 @@ export function PageContainer({
           )}
         </View>
       )}
-      {isAdmin && !isHome && plusBtnAction && <PlusButton onPress={plusBtnAction} />}
+      {isAdmin && plusBtnAction && <PlusButton onPress={plusBtnAction} />}
       {children}
     </View>
   );

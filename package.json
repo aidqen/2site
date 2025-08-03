@@ -33,6 +33,7 @@
     "expo-font": "~13.3.1",
     "expo-haptics": "~14.1.4",
     "expo-image": "~2.3.0",
+    "expo-image-picker": "~16.1.4",
     "expo-linear-gradient": "^14.1.5",
     "expo-linking": "~7.1.5",
     "expo-router": "~5.1.0",
@@ -40,6 +41,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "~0.4.5",
     "expo-system-ui": "~5.0.9",
+    "expo-updates": "~0.28.17",
     "expo-web-browser": "~14.2.0",
     "firebase": "^11.10.0",
     "nativewind": "^4.1.23",
@@ -48,9 +50,11 @@
     "react-native": "0.79.4",
     "react-native-airplay-button": "^1.1.0",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-fbsdk-next": "^13.4.1",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-google-cast": "^4.8.3",
     "react-native-image-picker": "^8.2.1",
+    "react-native-orientation-locker": "^1.7.0",
     "react-native-permissions": "^5.4.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "^5.4.0",
@@ -61,9 +65,7 @@
     "react-native-webview": "13.13.5",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
-    "tailwindcss": "^3.4.17",
-    "expo-image-picker": "~16.1.4",
-    "expo-updates": "~0.28.17"
+    "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

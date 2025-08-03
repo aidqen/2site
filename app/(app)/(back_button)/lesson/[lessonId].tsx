@@ -9,6 +9,7 @@ import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import CastContext, { CastButton, CastState, useCastSession, useCastState, useRemoteMediaClient } from "react-native-google-cast";
+import Orientation from 'react-native-orientation-locker';
 import Video, { VideoRef } from "react-native-video";
 import { useSelector } from "react-redux";
 
@@ -38,7 +39,6 @@ export default function LessonPage() {
     const [index, setIndex] = useState(0)
     const [isFavorite, setIsFavorite] = useState(false)
     const [loading, setLoading] = useState(true)
-    const castButtonRef = useRef(null)
 
     useEffect(() => {
         play()
@@ -67,15 +67,13 @@ export default function LessonPage() {
     }, [categoryLessons, index])
 
 
-    // Use useFocusEffect to refresh data when navigating back to this screen
     useFocusEffect(
         useCallback(() => {
             fetchLesson();
             isLessonFavorite();
 
-            // No cleanup function needed
             return () => { };
-        }, [category, lessonId, categoryLessons])
+        }, [category, lessonId, categoryLessons, user])
     );
 
 
@@ -112,9 +110,7 @@ export default function LessonPage() {
     function isLessonFavorite() {
         const favoriteLessons = user?.favoriteLessons
         if (favoriteLessons && favoriteLessons?.length > 0) {
-            console.log("🚀 ~ isLessonFavorite ~ lessonId:", lessonId)
             const isLessonFavorite = favoriteLessons?.some((favLesson: FavoriteLesson) => {
-                console.log("🚀 ~ isLessonFavorite ~ favLesson.id:", favLesson.id)
                 return favLesson.id === lessonId
             })
             setIsFavorite(isLessonFavorite)
@@ -201,7 +197,7 @@ export default function LessonPage() {
     return (
         <View className="flex-1 justify-between bg-white py-16 px-4">
             <EditButton onPress={navigateToEditLesson} />
-            <View className="w-full items-center ">
+            <View className="w-full items-center mb-5">
                 <Text className="text-2xl font-bold text-center rtl:text-right" style={{ color: colors.primaryDarker }}>
                     {category?.name}
                 </Text>
@@ -211,6 +207,13 @@ export default function LessonPage() {
                 <View className="relative rounded-lg overflow-hidden">
                     <Video
                         ref={videoRef}
+                        allowsExternalPlayback
+                        onFullscreenPlayerWillPresent={() => {
+                            Orientation.lockToLandscape()
+                          }}
+                          onFullscreenPlayerWillDismiss={() => {
+                            Orientation.lockToPortrait()
+                          }}
                         source={{ uri: mediaState.videoUri }}
                         className="w-full h-56 rounded-lg"
                         style={{ width: '100%', height: 246 }} // 56 tailwind units = 224px
@@ -245,8 +248,8 @@ export default function LessonPage() {
                 </View>
             </View>
 
-            <View className="mt-10 mb-[25%] px-5 gap-2">
-                    <CastButton />
+            <View className="mt-[2%] mb-[25%] px-5 gap-1">
+                    <CastButton style={{display: 'none'}}/>
                 <TouchableOpacity
                     className="rounded-md py-3 mb-3"
                     style={{ backgroundColor: colors.primaryDarker }}

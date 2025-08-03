@@ -20,9 +20,9 @@ export default function LoginScreen() {
 
   React.useEffect(() => {
     GoogleSignin.configure({
-        webClientId: '940099451051-27k3m5q01c4d11pfb104jdlqrj7q3jl7.apps.googleusercontent.com', // Get this from your Firebase console
+      webClientId: '753943248783-9hruakur0uladqrnm8i16pd7rb8m5qf8.apps.googleusercontent.com',
     });
-}, []);
+  }, []);
 
   async function signInWithEmail() {
     try {
@@ -37,7 +37,7 @@ export default function LoginScreen() {
 
   // const handleGoogleLogin = async () => {
   //   console.log('Google login button pressed');
-    
+
   //   try {
   //     const userCredential = await onGoogleButtonPress();
   //     console.log('Google sign-in successful:', userCredential.user.uid);
@@ -49,33 +49,36 @@ export default function LoginScreen() {
 
   const handleGoogleLogin = async () => {
     setLoading(true);
-        try {
-            // Check if your device supports Google Play
-            await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+    try {
+      GoogleSignin.configure({
+        webClientId: '753943248783-9hruakur0uladqrnm8i16pd7rb8m5qf8.apps.googleusercontent.com',
+      });
+      // Check if your device supports Google Play
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
 
-            // Get the user ID token
-            const response = await GoogleSignin.signIn();
-            console.log("🔍 ~ LoginScreen ~ app/(app)/(back_button)/auth/login.tsx:49 ~ response:", response)
+      // Get the user ID token
+      const response = await GoogleSignin.signIn();
+      console.log("🔍 ~ LoginScreen ~ app/(app)/(back_button)/auth/login.tsx:49 ~ response:", response)
 
-            // Check if sign-in was successful
-            if (response.type === 'success' && response.data.idToken) {
-                // Create a Google credential with the token
-                const googleCredential = GoogleAuthProvider.credential(response.data.idToken);
+      // Check if sign-in was successful
+      if (response.type === 'success' && response.data.idToken) {
+        // Create a Google credential with the token
+        const googleCredential = GoogleAuthProvider.credential(response.data.idToken);
 
-                // Sign-in the user with the credential
-                await signInWithCredential(getAuth(), googleCredential);
-                console.log('User signed in with Google!');
-            } else {
-                console.log('Google Sign-In was cancelled or failed');
-                setLoading(false);
-                return;
-            }
-        } catch (error: any) {
-            console.error(error);
-            Alert.alert('Error', 'Google sign in failed. Please try again.');
-        } finally {
-            setLoading(false);
-        }
+        // Sign-in the user with the credential
+        await signInWithCredential(getAuth(), googleCredential);
+        console.log('User signed in with Google!');
+      } else {
+        console.log('Google Sign-In was cancelled or failed');
+        setLoading(false);
+        return;
+      }
+    } catch (error: any) {
+      console.error(error);
+      Alert.alert('Error', 'Google sign in failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,7 +87,7 @@ export default function LoginScreen() {
       <Stack.Screen options={{ headerShown: false }} />
 
 
-      <View className="flex-1 px-6 pt-[125px]">
+      <View className="flex-1 px-6 pt-[20%]">
         <View className="items-end mb-8">
           <Text className="font-bold text-[32px]" style={{ color: colors.primaryDarker }}>ברוכים השבים!</Text>
           <Text className="font-bold text-[32px] mb-2" style={{ color: colors.primaryDarker }}>טוב לראות אותך שוב</Text>
@@ -121,7 +124,7 @@ export default function LoginScreen() {
         </View>
 
         <SocialLoginButtons
-        onGooglePress={handleGoogleLogin}
+          onGooglePress={handleGoogleLogin}
         />
 
         <AuthFooter type="login" />

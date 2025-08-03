@@ -1,4 +1,3 @@
-import { BackButton } from "@/components/BackButton";
 import { EditButton } from "@/components/EditButton";
 import { ErrorState } from "@/components/ErrorState";
 import { LoadingState } from "@/components/LoadingState";
@@ -9,7 +8,7 @@ import { Lesson } from "@/types";
 import { LinearGradient } from "expo-linear-gradient";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -86,23 +85,23 @@ export default function CategoryDetails() {
         }}
       />
 
-      <ScrollView
+      {/* <ScrollView
         className="flex-1"
         contentContainerStyle={{ paddingBottom: 80 }}
         showsVerticalScrollIndicator={false}
-      >
-        <View className="relative">
+      > */}
+        <View className="relative h-[50%]">
           <Image
             source={{ uri: categoryImageUrl || "https://res.cloudinary.com/di6tqrg5y/image/upload/v1751113343/4_1_no5ofb.png" }}
             style={{
               width: '100%',
-              height: 550,
+              height: '100%',
               marginTop: -insets.top,
             }}
             resizeMode="cover"
           />
 
-          <BackButton />
+          {/* <BackButton /> */}
 
           <View style={{
             position: 'absolute',
@@ -141,9 +140,9 @@ export default function CategoryDetails() {
             </Text>
           </View>
 
-          <View className="mt-10 gap-3">
+          <View className="mt-10 gap-2">
             <TouchableOpacity
-              className="rounded-md py-3 mb-3"
+              className="rounded-md py-3 mb-2"
               style={{ backgroundColor: colors.primaryDarker }}
               activeOpacity={0.8}
               onPress={navigateToLesson}
@@ -171,7 +170,7 @@ export default function CategoryDetails() {
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 }

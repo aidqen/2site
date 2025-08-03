@@ -12,7 +12,7 @@ export function EditButton({isEdit, onPress}: {isEdit?: boolean, onPress?: () =>
     return (
         <View style={{
             position: 'absolute',
-            top: 45,
+            top: '5%',
             right: 20,
             zIndex: 10,
             width: 48,

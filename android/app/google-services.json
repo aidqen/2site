@@ -14,11 +14,27 @@
       },
       "oauth_client": [
         {
+          "client_id": "940099451051-a6foi88hamfm9ppss0k8tcn0fke1gs2o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dafnacaspi.yogapilates",
+            "certificate_hash": "c589f5f5797a2e45093becc7e23a01e1468feed0"
+          }
+        },
+        {
           "client_id": "940099451051-c720355h4ches6637drlfmarosiareml.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dafnacaspi.yogapilates",
             "certificate_hash": "87d55c39da1a8889bb2cce4ea356eb861bd8d74a"
+          }
+        },
+        {
+          "client_id": "940099451051-e49gslvde15mkn64sq808laihq00tcv7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dafnacaspi.yogapilates",
+            "certificate_hash": "2094826a4ab21977a4f2c573d8f90c034917f047"
           }
         },
         {

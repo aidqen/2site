@@ -1,64 +1,79 @@
-import { AuthButton } from '@/components/auth/AuthButton';
-import { Stack, router } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Stack, useRouter } from 'expo-router';
 import React from 'react';
-import { Image, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image, Pressable, Text, View } from 'react-native';
+
+const profileImage = require("../assets/images/profile.png");
 
 export default function WelcomeScreen() {
+  const router = useRouter()
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <StatusBar style="dark" />
+    <View className="flex-1 bg-white relative items-center">
       <Stack.Screen options={{ headerShown: false }} />
+      
+      {/* Profile Image */}
+      <View className="absolute w-full h-[550px] top-0 items-center">
+        <Image 
+          source={profileImage}
+          className="w-full h-full"
+          resizeMode="cover"
+          accessibilityLabel="Dr. Dafna Caspi profile image"
+        />
+      </View>
 
-      <View className="flex-1 relative flex justify-between">
-        {/* Logo at top */}
-        <Image
-          source={{ uri: 'https://res.cloudinary.com/di6tqrg5y/image/upload/v1751374852/%D7%9C%D7%95%D7%92%D7%95_%D7%93%D7%A4%D7%A0%D7%94_%D7%9B%D7%A1%D7%A4%D7%99_-_%D7%92%D7%93%D7%95%D7%9C_-_%D7%90%D7%A0%D7%92%D7%9C%D7%99%D7%AA_wmxbeo.png' }}
+      {/* Gradient Overlay using LinearGradient */}
+      <View style={{
+        position: 'absolute',
+        height: 350,
+        width: '100%',
+        top: 250,
+      }}>
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 1)']}
           style={{
             position: 'absolute',
-            width: 100,
-            height: 100,
-            top: '5%',
-            alignSelf: 'center',
-            marginTop: 60,
+            left: 0,
+            right: 0,
+            top: 0,
+            height: '100%',
           }}
-          resizeMode="contain"
         />
-
-        {/* Text absolutely centered in page */}
-        <View className="items-center absolute inset-0 justify-center">
-          <Image source={{ uri: 'https://res.cloudinary.com/di6tqrg5y/image/upload/v1751458725/logo_yrevdj.png' }}
-            style={{
-              width: '100%',
-              height: '60%',
-              top: '25%',
-              left: '50%',
-              transform: [{ translateX: '-50%' }, { translateY: '-50%' }],
-            }} />
-        </View>
-
-        {/* Position buttons at bottom */}
-        <View className="absolute -translate-x-[50%] left-[50%] bottom-2.5 w-full px-6 mb-8 self-end">
-          <AuthButton
-            title="התחברות"
-            onPress={() => router.push('/auth/login')}
-            variant="primary"
-            className='h-[53px]'
-            textStyle="text-3xl"
-          />
-
-          <AuthButton
-            title="הרשמה"
-            onPress={() => router.push('/auth/register')}
-            variant="secondary"
-            className='h-[53px]'
-            textStyle="text-3xl"
-          />
-        </View>
       </View>
-    </SafeAreaView>
+
+      {/* Text Content */}
+      <View className="absolute top-[455px] w-[332px] items-center">
+        <Text 
+          className="text-[#12616f] text-[18px] text-center tracking-tighter"
+          style={{ fontFamily: "IBMPlexSansHebrew-Regular", textAlign: 'center' }}
+        >
+          {`שלום! אני ד"ר דפנה כספי מורה ומאמנת תנועה בריאותית עם ניסיון של 35 שנה.`}
+          {"\n\n"}
+          {`באפליקציה זו תמצאו תרגולים פשוטים שמתאימים ליכולת האישית שלכם.`}
+          {"\n\n"}
+          {`המטרה שלי: לעזור לכם לזוז, להרגיש טוב, ולחיות באיכות חיים טובה. אני מאמינה שהתנועה היא מפתח לחיים מלאים ובריאים בכל גיל.`}
+          {"\n\n"}
+          {`הצטרפו אלינו למסע של כושר והשראה.`}
+        </Text>
+      </View>
+
+      {/* Start Button */}
+      <View className="absolute bottom-[5%] w-[321px] h-[53px]">
+        <Pressable
+          className="w-full h-full bg-[#74cede] rounded-lg shadow-md flex items-center justify-center"
+          onPress={() => router.push('/auth/register')}
+          accessibilityLabel="Start button"
+          accessibilityRole="button"
+        >
+          <Text 
+            className="text-white text-[32px] text-center"
+            style={{ fontFamily: "IBMPlexSansHebrew-Bold", textAlign: 'center' }}
+          >
+            התחילו
+          </Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
 
