@@ -3,12 +3,16 @@ import { AuthFooter } from '@/components/auth/AuthFooter';
 import { AuthInput } from '@/components/auth/AuthInput';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { colors } from '@/constants/styles';
-import { getAuth, GoogleAuthProvider, signInWithCredential, signInWithEmailAndPassword } from '@react-native-firebase/auth';
+import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithCredential, signInWithEmailAndPassword } from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import {
+  AccessToken,
+  LoginManager
+} from 'react-native-fbsdk-next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
@@ -35,17 +39,20 @@ export default function LoginScreen() {
     }
   }
 
-  // const handleGoogleLogin = async () => {
-  //   console.log('Google login button pressed');
+  async function handleFacebookLogin() {
+    console.log('hi');
+    
+    const res = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+    console.log("🚀 ~ handleFacebookLogin ~ res:", res)
+    if (res.isCancelled) throw new Error('User cancelled');
 
-  //   try {
-  //     const userCredential = await onGoogleButtonPress();
-  //     console.log('Google sign-in successful:', userCredential.user.uid);
-  //     router.replace('/(app)/home');
-  //   } catch (error) {
-  //     console.error('Google sign-in failed:', error);
-  //   }
-  // };
+    const data = await AccessToken.getCurrentAccessToken();
+    console.log("🚀 ~ handleFacebookLogin ~ data:", data)
+    if (!data?.accessToken) throw new Error('No access token');
+
+    const cred = FacebookAuthProvider.credential(data.accessToken);
+    return signInWithCredential(getAuth(), cred);
+  }
 
   const handleGoogleLogin = async () => {
     setLoading(true);
@@ -125,6 +132,7 @@ export default function LoginScreen() {
 
         <SocialLoginButtons
           onGooglePress={handleGoogleLogin}
+          onFacebookPress={handleFacebookLogin}
         />
 
         <AuthFooter type="login" />

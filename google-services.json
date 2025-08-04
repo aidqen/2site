@@ -30,15 +30,15 @@
           }
         },
         {
-          "client_id": "940099451051-e49gslvde15mkn64sq808laihq00tcv7.apps.googleusercontent.com",
+          "client_id": "940099451051-mgluta7ra51cn45segrn4ktojnnlao38.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.dafnacaspi.yogapilates",
-            "certificate_hash": "2094826a4ab21977a4f2c573d8f90c034917f047"
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "940099451051-27k3m5q01c4d11pfb104jdlqrj7q3jl7.apps.googleusercontent.com",
+          "client_id": "940099451051-pkk1ut9gqfl5ds4rs96irlh44si4rnkd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
