@@ -53,12 +53,7 @@
           }
         }
       ],
-      [
-        "react-native-google-cast",
-        {
-          "receiverAppId": "4A61A83D"
-        }
-      ],
+      
       [
         "expo-build-properties",
         {

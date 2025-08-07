@@ -8,17 +8,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
-import CastContext, { CastButton, CastState, useCastSession, useCastState, useRemoteMediaClient } from "react-native-google-cast";
+// import CastContext, { CastButton, CastState, useCastSession, useCastState, useRemoteMediaClient } from "react-native-google-cast";
 import Orientation from 'react-native-orientation-locker';
 import Video, { VideoRef } from "react-native-video";
 import { useSelector } from "react-redux";
 
 export default function LessonPage() {
     const router = useRouter()
-    const client = useRemoteMediaClient();
-    const session = useCastSession()
-    const castState = useCastState()
-    console.log("🚀 ~ LessonPage ~ client:", client)
+    // const client = useRemoteMediaClient();
+    // const session = useCastSession()
+    // const castState = useCastState()
+    // console.log("🚀 ~ LessonPage ~ client:", client)
 
     const { lessonId } = useLocalSearchParams();
     const videoRef = useRef<VideoRef>(null)
@@ -40,22 +40,22 @@ export default function LessonPage() {
     const [isFavorite, setIsFavorite] = useState(false)
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        play()
-    }, [client])
+    // useEffect(() => {
+    //     play()
+    // }, [client])
 
-    const play = async () => {
-        if (castState === CastState.CONNECTED && client && lesson && lesson.videoUrl) {
-          await client.loadMedia({
-            mediaInfo: {
-              contentUrl: lesson.videoUrl,
-              contentType: 'video/mp4',
-            //   metadata: { title: 'My Video' },
-            },
-            autoplay: true,
-          })
-        }
-      }
+    // const play = async () => {
+    //     if (castState === CastState.CONNECTED && client && lesson && lesson.videoUrl) {
+    //       await client.loadMedia({
+    //         mediaInfo: {
+    //           contentUrl: lesson.videoUrl,
+    //           contentType: 'video/mp4',
+    //         //   metadata: { title: 'My Video' },
+    //         },
+    //         autoplay: true,
+    //       })
+    //     }
+    //   }
     
 
     useEffect(() => {
@@ -101,11 +101,11 @@ export default function LessonPage() {
     function changeMediaState(key: string, value: boolean | string) {
         setMediaState(prev => ({ ...prev, [key]: value }));
     }
-    const castToTV = async () => {
-        const shown = await CastContext.showCastDialog()
-        console.log("🚀 ~ castToTV ~ shown:", shown)
+    // const castToTV = async () => {
+    //     const shown = await CastContext.showCastDialog()
+    //     console.log("🚀 ~ castToTV ~ shown:", shown)
 
-    };
+    // };
 
     function isLessonFavorite() {
         const favoriteLessons = user?.favoriteLessons
@@ -249,12 +249,12 @@ export default function LessonPage() {
             </View>
 
             <View className="mt-[2%] mb-[25%] px-5 gap-1">
-                    <CastButton style={{display: 'none'}}/>
+                    {/* <CastButton style={{display: 'none'}}/> */}
                 <TouchableOpacity
                     className="rounded-md py-3 mb-3"
                     style={{ backgroundColor: colors.primaryDarker }}
                     activeOpacity={0.8}
-                    onPress={castToTV}
+                    // onPress={castToTV}
                 >
                     <Text
                         className="text-white text-center font-bold text-[23px]"
